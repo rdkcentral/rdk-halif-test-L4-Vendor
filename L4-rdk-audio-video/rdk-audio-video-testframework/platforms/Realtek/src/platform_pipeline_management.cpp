@@ -23,8 +23,6 @@ public:
         const std::string absolutePath =
             std::filesystem::absolute(path).lexically_normal().string();
         const std::string& demuxElement = path.extension() == ".ts"
-                                                // The extension selects the demuxer for MPEG-TS versus ISO BMFF inputs.
-                                                const std::string& demuxElement = path.extension() == ".ts"
                                               ? configuration.tsDemuxElement
                                               : configuration.mp4DemuxElement;
         std::string pipeline = configuration.scenarioSourceElement +

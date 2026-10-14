@@ -1,7 +1,7 @@
 #[[ File: CMakeLists.txt
-	Purpose: Configure shared dependencies and install data for the RDK E AV suite. ]]
-cmake_minimum_required(VERSION 3.10)
-project(L4-rdk-audio-video VERSION 1.0 LANGUAGES C CXX)
+	Purpose: Configure shared dependencies and install data for the l4-rdk-audio-video project. ]]
+cmake_minimum_required(VERSION 3.18)
+project(l4-rdk-audio-video VERSION 1.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 
@@ -61,8 +61,8 @@ target_link_libraries(ut_core PUBLIC
 )
 
 # Keep multimedia and utility dependencies centralized for child test targets.
-add_library(L4-rdk-audio-video_dependencies INTERFACE)
-target_include_directories(L4-rdk-audio-video_dependencies INTERFACE
+add_library(l4-rdk-audio-video_dependencies INTERFACE)
+target_include_directories(l4-rdk-audio-video_dependencies INTERFACE
 	${GST_INCLUDE_DIRS}
 	${GST_VALIDATE_INCLUDE_DIRS}
 	${FFMPEG_INCLUDE_DIRS}
@@ -70,7 +70,7 @@ target_include_directories(L4-rdk-audio-video_dependencies INTERFACE
 	${LIBFYAML_INCLUDE_DIRS}
 )
 
-target_link_directories(L4-rdk-audio-video_dependencies INTERFACE
+target_link_directories(l4-rdk-audio-video_dependencies INTERFACE
 	${GST_LIBRARY_DIRS}
 	${GST_VALIDATE_LIBRARY_DIRS}
 	${FFMPEG_LIBRARY_DIRS}
@@ -78,7 +78,7 @@ target_link_directories(L4-rdk-audio-video_dependencies INTERFACE
 	${LIBFYAML_LIBRARY_DIRS}
 )
 
-target_link_libraries(L4-rdk-audio-video_dependencies INTERFACE
+target_link_libraries(l4-rdk-audio-video_dependencies INTERFACE
 	${GST_LIBRARIES}
 	${GST_VALIDATE_LIBRARIES}
 	${FFMPEG_LIBRARIES}
@@ -93,5 +93,5 @@ install(FILES config/platform.ini
 )
 
 install(DIRECTORY video-inputs/
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/rdk/L4-rdk-audio-video/video-inputs
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/rdk/l4-rdk-audio-video/video-inputs
 )

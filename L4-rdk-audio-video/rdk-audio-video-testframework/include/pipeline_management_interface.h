@@ -19,6 +19,12 @@ public:
     /** @return Lowercase platform identifier used for configuration matching. */
     virtual std::string platform_name() const = 0;
 
+    /** @return Whether common code should detect the input codec and check sink caps. */
+    virtual bool requires_codec_detection() const
+    {
+        return true;
+    }
+
     /**
      * Creates a GStreamer launch description for one media input.
      * @param configuration Runtime element and sink settings.

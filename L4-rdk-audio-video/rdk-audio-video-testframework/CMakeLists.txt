@@ -31,26 +31,26 @@ set(AUDIO_DECODER_SOURCES
     rdk-AV-UT.cpp
     src/common_test_framework.cpp
     src/configuration_layer.cpp
-    src/L4-rdk-audio-video.cpp
+    src/l4-rdk-audio-video.cpp
     src/pipeline_management_layer.cpp
     src/verification_layer.cpp
     ${PLATFORM_PIPELINE_SOURCE}
 )
 
-add_executable(L4-rdk-audio-video ${AUDIO_DECODER_SOURCES})
+add_executable(l4-rdk-audio-video ${AUDIO_DECODER_SOURCES})
 
-target_compile_features(L4-rdk-audio-video PRIVATE cxx_std_17)
-target_compile_definitions(L4-rdk-audio-video PRIVATE
+target_compile_features(l4-rdk-audio-video PRIVATE cxx_std_17)
+target_compile_definitions(l4-rdk-audio-video PRIVATE
     L4_DEFAULT_CONFIG_PATH="${L4_CONFIG_INSTALL_PATH}"
 )
-target_include_directories(L4-rdk-audio-video PRIVATE
+target_include_directories(l4-rdk-audio-video PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-target_link_libraries(L4-rdk-audio-video PRIVATE
+target_link_libraries(l4-rdk-audio-video PRIVATE
     ut_core
-    L4-rdk-audio-video_dependencies
+    l4-rdk-audio-video_dependencies
 )
 
-install(TARGETS L4-rdk-audio-video
+install(TARGETS l4-rdk-audio-video
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/rdkgstreamerplugin/l4test
 )

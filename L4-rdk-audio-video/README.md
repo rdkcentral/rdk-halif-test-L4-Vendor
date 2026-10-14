@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-`L4-rdk-audio-video` is a Yocto-built RDK test package for validating GStreamer video pipelines on platform-specific devices.
+`l4-rdk-audio-video` is a Yocto-built RDK test package for validating GStreamer video pipelines on platform-specific devices.
 
 The package combines:
 
@@ -18,7 +18,7 @@ The package combines:
 The current target executable is:
 
 ```text
-/usr/bin/rdkgstreamerplugin/l4test/L4-rdk-audio-video
+/usr/bin/rdkgstreamerplugin/l4test/l4-rdk-audio-video
 ```
 
 The design is intended to support additional test groups and platform implementations without moving common dependency or package logic into each test folder.
@@ -30,7 +30,7 @@ The framework is organized around these goals:
 1. Keep test registration separate from pipeline construction.
 2. Keep platform-specific pipeline decisions outside the common test code.
 3. Load runtime paths, element names, sinks, and thresholds from `platform.ini`.
-4. Detect the media codec before creating the platform pipeline.
+4. Detect the media codec when required by the selected platform pipeline.
 5. Reuse the common GstValidate execution and reporting flow.
 6. Allow future test folders to be added through child CMake projects.
 7. Keep Yocto packaging responsible for supplying the executable, configuration, libraries, and video assets.
@@ -46,9 +46,9 @@ The framework is organized around these goals:
 ## 5. Folder Structure
 
 ```text
-L4-rdk-audio-video/
+l4-rdk-audio-video/
 |-- CMakeLists.txt
-|-- L4-rdk-audio-video.bb
+|-- l4-rdk-audio-video.bb
 |-- README.md
 |-- config/
 |   `-- platform.ini
@@ -59,7 +59,7 @@ L4-rdk-audio-video/
 |   |-- CMakeLists.txt
 |   |-- rdk-AV-UT.cpp
 |   |-- include/
-|   |   |-- L4-rdk-audio-video.h
+|   |   |-- l4-rdk-audio-video.h
 |   |   |-- l4_configuration.h
 |   |   |-- pipeline_management_interface.h
 |   |   |-- pipeline_management_layer.h
@@ -74,7 +74,7 @@ L4-rdk-audio-video/
 |   `-- src/
 |       |-- common_test_framework.cpp
 |       |-- configuration_layer.cpp
-|       |-- L4-rdk-audio-video.cpp
+|       |-- l4-rdk-audio-video.cpp
 |       |-- pipeline_management_layer.cpp
 |       `-- verification_layer.cpp
 `-- video-inputs/
@@ -101,7 +101,7 @@ The root `CMakeLists.txt` owns shared build concerns:
 - CURL and libfyaml discovery.
 - GoogleTest and GoogleMock discovery.
 - The `ut_core` static library.
-- The shared `L4-rdk-audio-video_dependencies` interface target.
+- The shared `l4-rdk-audio-video_dependencies` interface target.
 - Installation of `platform.ini` and the `video-inputs/` directory.
 - Registration of child test folders.
 
@@ -119,9 +119,9 @@ L4_CONFIG_INSTALL_PATH
 
 - Common decoder test sources.
 - The selected platform source.
-- The `L4-rdk-audio-video` executable.
+- The `l4-rdk-audio-video` executable.
 - Test-specific include paths and compile definitions.
-- Linking to `ut_core` and `L4-rdk-audio-video_dependencies`.
+- Linking to `ut_core` and `l4-rdk-audio-video_dependencies`.
 - Installation of the executable.
 
 The child does not rediscover shared libraries. This keeps future child projects consistent and avoids duplicating dependency logic.
@@ -145,7 +145,7 @@ The C/C++ language split is intentional:
 
 ## 7. Yocto Integration
 
-The recipe is `L4-rdk-audio-video.bb`.
+The recipe is `l4-rdk-audio-video.bb`.
 
 ### Source Inputs
 
@@ -161,7 +161,7 @@ Both use the `develop` branch and currently use `${AUTOREV}`. Pin `SRCREV_utcore
 The local source directory is:
 
 ```bitbake
-S = "${WORKDIR}/L4-rdk-audio-video"
+S = "${WORKDIR}/l4-rdk-audio-video"
 ```
 
 ### Build Dependencies
@@ -191,9 +191,9 @@ RDEPENDS:${PN} = " \
 The package installs:
 
 ```text
-/usr/bin/rdkgstreamerplugin/l4test/L4-rdk-audio-video
+/usr/bin/rdkgstreamerplugin/l4test/l4-rdk-audio-video
 /etc/rdk/ut-core/platform.ini
-/usr/share/rdk/L4-rdk-audio-video/video-inputs/*
+/usr/share/rdk/l4-rdk-audio-video/video-inputs/*
 ```
 
 ## 8. Runtime Configuration
@@ -230,12 +230,12 @@ The parser accepts `key=value` lines and ignores blank lines, comments beginning
 ### Build
 
 ```sh
-cd /home/naveen/Documents/yocto_build/24July_Apache4k_vendor
-export PATH=/home/naveen/bin:$PATH
+cd /path/to/yocto/workspace
+export PATH=/path/to/repo-tool/bin:$PATH
 MACHINE=apache-4k
 source scripts/setup-environment
-bitbake -c compile -f lib32-L4-rdk-audio-video
-bitbake -c install -f lib32-L4-rdk-audio-video
+bitbake -c compile -f lib32-l4-rdk-audio-video
+bitbake -c install -f lib32-l4-rdk-audio-video
 ```
 
 Build the selected image after changing the recipe, FFmpeg configuration, platform implementation, or runtime assets.
@@ -243,18 +243,18 @@ Build the selected image after changing the recipe, FFmpeg configuration, platfo
 ### Device Verification
 
 ```sh
-ls -l /usr/bin/rdkgstreamerplugin/l4test/L4-rdk-audio-video
-ls -lh /usr/share/rdk/L4-rdk-audio-video/video-inputs/
+ls -l /usr/bin/rdkgstreamerplugin/l4test/l4-rdk-audio-video
+ls -lh /usr/share/rdk/l4-rdk-audio-video/video-inputs/
 ls -l /etc/rdk/ut-core/platform.ini
 ```
 
 If copying a standalone binary:
 
 ```sh
-scp -P 10022 L4-rdk-audio-video root@DEVICE_IP:/tmp/
+scp -P 10022 l4-rdk-audio-video root@DEVICE_IP:/tmp/
 ssh -p 10022 root@DEVICE_IP
-chmod +x /tmp/L4-rdk-audio-video
-/tmp/L4-rdk-audio-video
+chmod +x /tmp/l4-rdk-audio-video
+/tmp/l4-rdk-audio-video
 ```
 
 If `/tmp` is mounted `noexec`, run the binary from an executable filesystem.
@@ -281,7 +281,7 @@ The child CMake should own its sources and executable, and link shared targets:
 ```cmake
 target_link_libraries(new_test_target PRIVATE
     ut_core
-    L4-rdk-audio-video_dependencies
+    l4-rdk-audio-video_dependencies
 )
 ```
 

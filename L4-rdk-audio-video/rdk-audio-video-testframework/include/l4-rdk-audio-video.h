@@ -1,4 +1,4 @@
-/** @file L4-rdk-audio-video.h
+/** @file l4-rdk-audio-video.h
  * @brief Declares the common L4 audio/video scenario test interface.
  */
 #ifndef L4_RDK_AUDIO_VIDEO_H

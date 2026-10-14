@@ -56,8 +56,6 @@ DetectedVideoInfo VideoCodecDetector::detect(const std::string& videoPath)
                                  std::to_string(openResult) + ")");
     }
     const auto closeInput = [](AVFormatContext* context) { avformat_close_input(&context); };
-        // Scope the FFmpeg context so every later error path closes the input.
-        const auto closeInput = [](AVFormatContext* context) { avformat_close_input(&context); };
     std::unique_ptr<AVFormatContext, decltype(closeInput)> input(formatContext, closeInput);
     const int streamResult = avformat_find_stream_info(input.get(), nullptr);
     if (streamResult < 0) {

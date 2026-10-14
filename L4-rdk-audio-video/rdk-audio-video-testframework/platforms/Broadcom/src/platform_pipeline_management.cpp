@@ -4,6 +4,7 @@
 #include "pipeline_management_interface.h"
 
 #include <filesystem>
+#include <stdexcept>
 
 namespace {
 class BroadcomPipelineManagement final : public PipelineManagementInterface {
@@ -14,34 +15,37 @@ public:
         return "broadcom";
     }
 
-    /** Selects demuxing and codec handling, then appends the configured sink. */
+    /** Broadcom's video filter handles codec-specific input before the sink. */
+    bool requires_codec_detection() const override
+    {
+        return false;
+    }
+
+    /** Selects the demuxer, then appends the configured video filter and sink. */
     std::string pipeline_creation(const L4Configuration& configuration,
                                  const std::string& videoPath,
-                                 const DetectedVideoInfo& videoInfo) const override
+                                 const DetectedVideoInfo&) const override
     {
         const std::filesystem::path path(videoPath);
         const std::string absolutePath =
             std::filesystem::absolute(path).lexically_normal().string();
-        const std::string& demuxElement = path.extension() == ".ts"
-                                                // The extension selects the demuxer for MPEG-TS versus ISO BMFF inputs.
-                                                const std::string& demuxElement = path.extension() == ".ts"
-                                              ? configuration.tsDemuxElement
-                                              : configuration.mp4DemuxElement;
+        const bool isTransportStream = path.extension() == ".ts";
+        const std::string& demuxElement = isTransportStream
+                              ? configuration.tsDemuxElement
+                              : configuration.mp4DemuxElement;
+        const std::string& demuxLink = isTransportStream
+                           ? configuration.tsDemuxLink
+                           : configuration.mp4DemuxLink;
+        if (configuration.videoFilter.empty()) {
+            throw std::runtime_error("Broadcom video_filter is required");
+        }
         std::string pipeline = configuration.scenarioSourceElement +
                                " location=\"" + absolutePath + "\"";
         if (!demuxElement.empty()) {
-            pipeline += " ! " + demuxElement;
+            pipeline += " ! " + demuxElement + " name=demux " + demuxLink;
         }
-        if (videoInfo.capsName == "video/x-vp8") {
-            // VP8 uses software decode and bypasses the configured decoder element.
-            pipeline += " ! avdec_vp8 ! " + configuration.videoConvertElement +
-                        " name=timestamp_output";
-        } else {
-            pipeline += " ! " + videoInfo.parserElement + " name=timestamp_output";
-            if (!configuration.decoderElement.empty()) {
-                pipeline += " ! " + configuration.decoderElement;
-            }
-        }
+        pipeline += " ! " + configuration.videoFilter +
+                    " ! identity name=timestamp_output";
         if (!configuration.videoSink.empty()) {
             pipeline += " ! " + configuration.videoSink;
         }

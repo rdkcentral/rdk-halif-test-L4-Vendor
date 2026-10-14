@@ -1,8 +1,8 @@
-/** @file L4-rdk-audio-video.cpp
+/** @file l4-rdk-audio-video.cpp
  * @brief Registers the active scenarios with the UT Core suite.
  */
 #include <ut.h>
-#include "L4-rdk-audio-video.h"
+#include "l4-rdk-audio-video.h"
 
 /** Shares one scenario runner fixture across the registered UT-Core cases. */
 class L4RdkAudioVideoTest : public UTCore {

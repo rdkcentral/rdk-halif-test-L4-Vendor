@@ -15,7 +15,7 @@ PipelineManagementLayer::PipelineManagementLayer()
 {
 }
 
-/** Validates platform identity and codec metadata before delegating pipeline assembly. */
+/** Validates platform identity and any required codec metadata before pipeline assembly. */
 std::string PipelineManagementLayer::createScenarioPipeline(
     const L4Configuration& configuration,
     const std::string& videoPath) const
@@ -23,19 +23,20 @@ std::string PipelineManagementLayer::createScenarioPipeline(
     const std::string compiledPlatform = platformPipelineManagement->platform_name();
     std::string configuredPlatform = configuration.platform;
     std::transform(configuredPlatform.begin(), configuredPlatform.end(),
-                    // Normalize configuration input so casing does not affect platform matching.
-                    std::transform(configuredPlatform.begin(), configuredPlatform.end(),
                    configuredPlatform.begin(), [](unsigned char character) {
                        return static_cast<char>(std::tolower(character));
                    });
-        if (configuredPlatform.find(compiledPlatform) == std::string::npos) {
+    if (configuredPlatform.find(compiledPlatform) == std::string::npos) {
         throw std::runtime_error("Configured platform '" + configuration.platform +
                                  "' does not match the platform selected at CMake configure time ('" +
                                  compiledPlatform + "')");
     }
-    const DetectedVideoInfo videoInfo = VideoCodecDetector::detect(videoPath);
-    if (!configuration.videoSink.empty()) {
-        VideoCodecDetector::verifySinkSupportsCodec(configuration.videoSink, videoInfo);
+    DetectedVideoInfo videoInfo{};
+    if (platformPipelineManagement->requires_codec_detection()) {
+        videoInfo = VideoCodecDetector::detect(videoPath);
+        if (!configuration.videoSink.empty()) {
+            VideoCodecDetector::verifySinkSupportsCodec(configuration.videoSink, videoInfo);
+        }
     }
     return platformPipelineManagement->pipeline_creation(configuration, videoPath, videoInfo);
 }
