@@ -1,6 +1,6 @@
 #[[ File: CMakeLists.txt
 	Purpose: Configure shared dependencies and install data for the l4-rdk-audio-video project. ]]
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 project(l4-rdk-audio-video VERSION 1.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
