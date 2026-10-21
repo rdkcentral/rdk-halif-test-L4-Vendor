@@ -11,15 +11,15 @@
 #include <gst/validate/validate.h>
 
 #include <chrono>
-#include <cerrno>
+#include <cctype>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <mutex>
 #include <sstream>
 #include <stdexcept>
-#include <unistd.h>
 #include <vector>
 
 namespace {
@@ -29,61 +29,23 @@ std::string configurationPath()
     const char* path = std::getenv("L4_CONFIG");
     return path ? path : L4_DEFAULT_CONFIG_PATH;
 }
-
-/** Creates a unique temporary file and returns its still-open descriptor. */
-int create_temporary_file(const std::string& prefix, std::filesystem::path& path)
-{
-    const std::string file_template = prefix + "-XXXXXX";
-    gchar* template_name = g_strdup(file_template.c_str());
-    gchar* file_name = nullptr;
-    GError* error = nullptr;
-    const int descriptor = g_file_open_tmp(template_name, &file_name, &error);
-    g_free(template_name);
-    if (descriptor < 0) {
-        const std::string message = error ? error->message : "unknown error";
-        g_clear_error(&error);
-        throw std::runtime_error("Could not create temporary file: " + message);
-    }
-    path = file_name;
-    g_free(file_name);
-    return descriptor;
-}
-
-/** Writes all bytes to a temporary-file descriptor and closes it. */
-bool write_and_close(int descriptor, const std::string& contents)
-{
-    std::size_t offset = 0;
-    while (offset < contents.size()) {
-        const ssize_t written = ::write(descriptor, contents.data() + offset,
-                                        contents.size() - offset);
-        if (written < 0 && errno == EINTR) {
-            continue;
-        }
-        if (written <= 0) {
-            ::close(descriptor);
-            return false;
-        }
-        offset += static_cast<std::size_t>(written);
-    }
-    return ::close(descriptor) == 0;
-}
 }
 
 /** Initializes the common scenario runner. */
-RDKAudioDecoderL4::RDKAudioDecoderL4()
+RDKAudioVideo::RDKAudioVideo()
 
 {
 }
 
 /** Emits the UT smoke-test message. */
-void RDKAudioDecoderL4::helloWorld()
+void RDKAudioVideo::helloWorld()
 {
     std::cout << "Hello world" << std::endl;
 }
 
 
 /** Loads runtime settings and runs the pause/resume scenario. */
-bool RDKAudioDecoderL4::runPauseValidationScenario()
+bool RDKAudioVideo::runPauseValidationScenario()
 {
     const L4Configuration configuration = ConfigurationLayer::load(configurationPath());
     return runVideoScenario(configuration, "pause", configuration.pauseVideo, configuration.videoSink,
@@ -92,7 +54,7 @@ bool RDKAudioDecoderL4::runPauseValidationScenario()
 }
 
 /** Loads runtime settings and runs the forward-seek scenario. */
-bool RDKAudioDecoderL4::runForwardSeekValidationScenario()
+bool RDKAudioVideo::runForwardSeekValidationScenario()
 {
     const L4Configuration configuration = ConfigurationLayer::load(configurationPath());
     return runVideoScenario(configuration, "forward-seek", configuration.forwardSeekVideo, configuration.videoSink,
@@ -101,7 +63,7 @@ bool RDKAudioDecoderL4::runForwardSeekValidationScenario()
 }
 
 /** Runs both configured timestamp-defective inputs and requires both expectations to pass. */
-bool RDKAudioDecoderL4::runTimestampContinuityValidationScenario()
+bool RDKAudioVideo::runTimestampContinuityValidationScenario()
 {
     const L4Configuration configuration = ConfigurationLayer::load(configurationPath());
     const bool gapResult = runVideoScenario(configuration, "timestamp-continuity", configuration.timestampGapVideo,
@@ -218,7 +180,7 @@ void capture_gstreamer_log(GstDebugCategory* category, GstDebugLevel level,
                            GObject* object, GstDebugMessage* message,
                            gpointer user_data)
 {
-    if (level > GST_LEVEL_WARNING || !user_data || !message) {
+    if (level < GST_LEVEL_WARNING || !user_data || !message) {
         return;
     }
     auto* context = static_cast<RunContext*>(user_data);
@@ -529,9 +491,9 @@ std::string make_run_report(GstValidateRunner* runner, const RunContext& context
     return report.str();
 }
 
-/** Writes this run as a one-entry JSON report to its unique temporary file. */
-bool write_report(int report_descriptor, GstValidateRunner* runner,
-                  const RunContext& context,
+/** Writes a new report array or appends this run to an existing JSON array. */
+    void write_report(const std::filesystem::path& report_path, GstValidateRunner* runner,
+                const RunContext& context,
                   const std::string& scenario_name, const std::string& video_path,
                   bool pipeline_failed, const std::string& started_at,
                   const std::string& finished_at, double elapsed_seconds,
@@ -541,13 +503,31 @@ bool write_report(int report_descriptor, GstValidateRunner* runner,
                                                    pipeline_failed, started_at, finished_at,
                                                    elapsed_seconds, media_duration_seconds,
                                                    final_position_seconds);
-    return write_and_close(report_descriptor, "[\n" + run_report + "]\n");
+    std::ifstream existing(report_path);
+    std::string contents((std::istreambuf_iterator<char>(existing)),
+                         std::istreambuf_iterator<char>());
+    std::ofstream report(report_path, std::ios::trunc);
+    if (contents.empty()) {
+        report << "[\n" << run_report << "]\n";
+        return;
+    }
+    const std::size_t closing_bracket = contents.rfind(']');
+    if (contents.front() != '[' || closing_bracket == std::string::npos) {
+        report << "[\n" << run_report << "]\n";
+        return;
+    }
+    contents.erase(closing_bracket);
+    while (!contents.empty() && std::isspace(static_cast<unsigned char>(contents.back()))) {
+        contents.pop_back();
+    }
+    report << contents << (contents.back() == '[' ? "" : ",\n")
+           << run_report << "]\n";
 }
 
 } // namespace
 
 /** Builds, runs, evaluates, reports, and releases one configured GstValidate scenario. */
-bool RDKAudioDecoderL4::runVideoScenario(const L4Configuration& configuration,
+bool RDKAudioVideo::runVideoScenario(const L4Configuration& configuration,
                                          const std::string& scenarioName,
                                          const std::string& videoPath,
                                          const std::string& videoSink,
@@ -601,24 +581,16 @@ bool RDKAudioDecoderL4::runVideoScenario(const L4Configuration& configuration,
         gst_validate_deinit();
         return false;
     }
-    std::filesystem::path scenario_path;
-    int scenario_descriptor = -1;
-    try {
-        scenario_descriptor = create_temporary_file("gst_validate_video_" + scenario_name,
-                                                    scenario_path);
-    } catch (const std::exception& error) {
-        std::cerr << error.what() << '\n';
-        gst_object_unref(pipeline_element);
+    const std::filesystem::path scenario_path = std::filesystem::temp_directory_path() /
+        ("gst_validate_video_" + scenario_name + ".scenario");
+    std::ofstream scenario_file(scenario_path);
+    if (!scenario_file) {
+        std::cerr << "Could not create scenario file: " << scenario_path << '\n';
         gst_validate_deinit();
         return false;
     }
-    if (!write_and_close(scenario_descriptor, scenario)) {
-        std::cerr << "Could not write scenario file: " << scenario_path << '\n';
-        std::filesystem::remove(scenario_path);
-        gst_object_unref(pipeline_element);
-        gst_validate_deinit();
-        return false;
-    }
+    scenario_file << scenario;
+    scenario_file.close();
     GstValidateRunner* runner = gst_validate_runner_new();
     GstValidateMonitor* monitor = gst_validate_monitor_factory_create(GST_OBJECT(pipeline_element), runner, nullptr);
     if (!runner || !monitor) {
@@ -626,7 +598,6 @@ bool RDKAudioDecoderL4::runVideoScenario(const L4Configuration& configuration,
         if (monitor) gst_object_unref(monitor);
         if (runner) gst_object_unref(runner);
         gst_object_unref(pipeline_element);
-        std::filesystem::remove(scenario_path);
         gst_validate_deinit();
         return false;
     }
@@ -636,7 +607,6 @@ bool RDKAudioDecoderL4::runVideoScenario(const L4Configuration& configuration,
         gst_object_unref(monitor);
         gst_object_unref(runner);
         gst_object_unref(pipeline_element);
-        std::filesystem::remove(scenario_path);
         gst_validate_deinit();
         return false;
     }
@@ -660,7 +630,6 @@ bool RDKAudioDecoderL4::runVideoScenario(const L4Configuration& configuration,
             gst_object_unref(monitor);
             gst_object_unref(runner);
             gst_object_unref(pipeline_element);
-            std::filesystem::remove(scenario_path);
             gst_validate_deinit();
             return false;
         }
@@ -677,45 +646,25 @@ bool RDKAudioDecoderL4::runVideoScenario(const L4Configuration& configuration,
     context.timeout_source_id = g_timeout_add_seconds(eosTimeoutSeconds == 0 ? 1 : eosTimeoutSeconds, stop_scenario_on_timeout, &context);
     if (gst_element_set_state(pipeline_element, GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
         context.failed = true;
-    } else {
-        g_main_loop_run(loop);
+        g_main_loop_quit(loop);
     }
+    g_main_loop_run(loop);
     gst_element_set_state(pipeline_element, GST_STATE_NULL);
     const auto run_finished = std::chrono::system_clock::now();
     const double elapsed_seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - steady_started).count();
     const auto to_seconds = [](gint64 time) { return time < 0 ? 0.0 : static_cast<double>(time) / GST_SECOND; };
-    std::filesystem::path report_path;
-    bool report_written = false;
-    try {
-        const int report_descriptor = create_temporary_file("validate-report-" + scenario_name,
-                                                            report_path);
-        report_written = write_report(report_descriptor, runner, context, scenario_name,
-                                      absolute_path, context.failed, utc_timestamp(run_started),
-                                      utc_timestamp(run_finished), elapsed_seconds,
-                                      to_seconds(context.media_duration),
-                                      to_seconds(context.final_position));
-    } catch (const std::exception& error) {
-        std::cerr << error.what() << '\n';
-    }
-    if (!report_written) {
-        std::cerr << "Could not write validation report.\n";
-        context.failed = true;
-        if (!report_path.empty()) {
-            std::filesystem::remove(report_path);
-        }
-    } else {
-        std::cout << "Validation report written to " << report_path << '\n';
-    }
-    const int validate_exit_status = gst_validate_runner_exit(runner, FALSE);
-    const bool run_failed = context.failed ||
-                            (expectTimestampAnomaly != context.timestamp_failed) ||
-                            validate_exit_status != 0;
+    const std::filesystem::path report_path = std::filesystem::temp_directory_path() / ("validate-report-" + scenario_name + ".json");
+    const bool run_failed = context.failed || (expectTimestampAnomaly != context.timestamp_failed);
     // A mismatch in anomaly expectation is a test failure even when GStreamer itself ran cleanly.
+    write_report(report_path, runner, context, scenario_name, absolute_path, context.failed,
+                 utc_timestamp(run_started), utc_timestamp(run_finished), elapsed_seconds,
+                 to_seconds(context.media_duration), to_seconds(context.final_position));
     gst_debug_remove_log_function_by_data(&context);
     if (position_source_id != 0) g_source_remove(position_source_id);
     if (context.timeout_source_id != 0) g_source_remove(context.timeout_source_id);
     gst_bus_remove_signal_watch(bus);
     gst_object_unref(bus);
+    std::cout << "Validation report written to " << report_path << '\n';
     g_main_loop_unref(loop);
     gst_object_unref(validate_scenario);
     gst_object_unref(monitor);

@@ -10,10 +10,10 @@
 #include <string>
 
 /** Runs the shared GstValidate scenarios used by the L4 test suite. */
-class RDKAudioDecoderL4 {
+class RDKAudioVideo {
 public:
     /** Constructs the runner and its platform pipeline-management layer. */
-    RDKAudioDecoderL4();
+    RDKAudioVideo();
 
     /** Prints the UT smoke-test message. */
     void helloWorld();
