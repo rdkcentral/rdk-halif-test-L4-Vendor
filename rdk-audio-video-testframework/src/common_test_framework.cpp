@@ -143,6 +143,10 @@ struct RunContext {
     GMainLoop* loop;
     GstElement* pipeline;
     bool failed;
+    bool scenario_completed;
+    bool expect_timestamp_anomaly;
+    bool expected_timestamp_report_seen;
+    bool unexpected_validate_report_seen;
     gint64 media_duration;
     gint64 final_position;
     bool timestamp_failed;
@@ -158,6 +162,7 @@ struct RunContext {
     std::vector<TimestampAnomaly> timestamp_anomalies;
     mutable std::mutex gstreamer_log_mutex;
     std::vector<GStreamerLogEntry> gstreamer_logs;
+    mutable std::mutex validate_report_mutex;
     guint timeout_source_id;
     bool timed_out;
 };
@@ -172,6 +177,27 @@ gboolean stop_scenario_on_timeout(gpointer data)
     std::cerr << "GStreamer scenario timed out before EOS or stop" << '\n';
     g_main_loop_quit(context->loop);
     return G_SOURCE_REMOVE;
+}
+
+/** Records completion after GstValidate has executed every scenario action. */
+void mark_scenario_completed(GstValidateScenario*, gpointer data)
+{
+    auto* context = static_cast<RunContext*>(data);
+    context->scenario_completed = true;
+}
+
+/** Tracks actionable GstValidate reports, allowing only the expected timestamp-range issue. */
+void inspect_validate_report(GstValidateRunner*, GstValidateReport* report, gpointer data)
+{
+    auto* context = static_cast<RunContext*>(data);
+    const bool timestamp_range_issue = report && report->issue && report->issue->name &&
+        std::string(report->issue->name) == "buffer::timestamp-out-of-received-range";
+    std::lock_guard<std::mutex> lock(context->validate_report_mutex);
+    if (context->expect_timestamp_anomaly && timestamp_range_issue) {
+        context->expected_timestamp_report_seen = true;
+    } else if (report && report->level != GST_VALIDATE_REPORT_LEVEL_IGNORE) {
+        context->unexpected_validate_report_seen = true;
+    }
 }
 
 /** Retains warnings and errors; GStreamer may invoke this from streaming threads. */
@@ -418,6 +444,7 @@ std::string scenario_actions(const std::string& scenario_name)
 std::string make_run_report(GstValidateRunner* runner, const RunContext& context,
                             const std::string& scenario_name,
                             const std::string& video_path, bool pipeline_failed,
+                            bool validation_failed, int validate_exit_status,
                             const std::string& started_at, const std::string& finished_at,
                             double elapsed_seconds, double media_duration_seconds,
                             double final_position_seconds)
@@ -428,12 +455,15 @@ std::string make_run_report(GstValidateRunner* runner, const RunContext& context
            << "    \"scenario\": \"" << json_escape(scenario_name) << "\",\n"
            << "    \"video\": \"" << json_escape(video_path) << "\",\n"
            << "    \"pipeline_failed\": " << (pipeline_failed ? "true" : "false") << ",\n"
+           << "    \"scenario_completed\": " << (context.scenario_completed ? "true" : "false") << ",\n"
+           << "    \"gst_validate_exit_status\": " << validate_exit_status << ",\n"
+           << "    \"gst_validate_report_count\": " << gst_validate_runner_get_reports_count(runner) << ",\n"
            << "    \"started_at\": \"" << started_at << "\",\n"
            << "    \"finished_at\": \"" << finished_at << "\",\n"
            << "    \"elapsed_seconds\": " << elapsed_seconds << ",\n"
            << "    \"media_duration_seconds\": " << media_duration_seconds << ",\n"
            << "    \"final_position_seconds\": " << final_position_seconds << ",\n"
-           << "    \"validation_failed\": " << (context.timestamp_failed ? "true" : "false") << ",\n"
+           << "    \"validation_failed\": " << (validation_failed ? "true" : "false") << ",\n"
            << "    \"actions\": " << scenario_actions(scenario_name) << ",\n"
             ;
         if (scenario_name == "timestamp-continuity") {
@@ -495,12 +525,14 @@ std::string make_run_report(GstValidateRunner* runner, const RunContext& context
     void write_report(const std::filesystem::path& report_path, GstValidateRunner* runner,
                 const RunContext& context,
                   const std::string& scenario_name, const std::string& video_path,
-                  bool pipeline_failed, const std::string& started_at,
+                  bool pipeline_failed, bool validation_failed, int validate_exit_status,
+                  const std::string& started_at,
                   const std::string& finished_at, double elapsed_seconds,
                   double media_duration_seconds, double final_position_seconds)
 {
     const std::string run_report = make_run_report(runner, context, scenario_name, video_path,
-                                                   pipeline_failed, started_at, finished_at,
+                                                   pipeline_failed, validation_failed,
+                                                   validate_exit_status, started_at, finished_at,
                                                    elapsed_seconds, media_duration_seconds,
                                                    final_position_seconds);
     std::ifstream existing(report_path);
@@ -568,10 +600,11 @@ bool RDKAudioVideo::runVideoScenario(const L4Configuration& configuration,
         GError* parse_error = nullptr;
         pipeline_element = pipelineManagementLayer.createScenarioGstPipeline(
             configuration, absolute_path, &parse_error);
-        if (!pipeline_element) {
+        if (!pipeline_element || parse_error) {
             std::cerr << "Could not create pipeline: "
                       << (parse_error ? parse_error->message : "unknown") << '\n';
             g_clear_error(&parse_error);
+            if (pipeline_element) gst_object_unref(pipeline_element);
             gst_validate_deinit();
             return false;
         }
@@ -616,9 +649,12 @@ bool RDKAudioVideo::runVideoScenario(const L4Configuration& configuration,
     const auto run_started = std::chrono::system_clock::now();
     const auto steady_started = std::chrono::steady_clock::now();
     GMainLoop* loop = g_main_loop_new(nullptr, FALSE);
-    RunContext context{loop, pipeline_element, false, -1, -1, false, false, false,
+    RunContext context{loop, pipeline_element, false, false, expectTimestampAnomaly, false, false,
+                       -1, -1, false, false, false,
                        GST_CLOCK_TIME_NONE, GST_CLOCK_TIME_NONE, 0, 0, 0, 0, 0,
-                       {}, {}, {}, 0, false};
+                       {}, {}, {}, {}, 0, false};
+    g_signal_connect(validate_scenario, "done", G_CALLBACK(mark_scenario_completed), &context);
+    g_signal_connect(runner, "report-added", G_CALLBACK(inspect_validate_report), &context);
     if (scenario_name == "timestamp-continuity") {
         GstElement* output = gst_bin_get_by_name(GST_BIN(pipeline_element), "timestamp_output");
         GstPad* probe_pad = output ? gst_element_get_static_pad(output, "src") : nullptr;
@@ -650,13 +686,34 @@ bool RDKAudioVideo::runVideoScenario(const L4Configuration& configuration,
     }
     g_main_loop_run(loop);
     gst_element_set_state(pipeline_element, GST_STATE_NULL);
+    const int validate_exit_status = gst_validate_runner_exit(runner, FALSE);
     const auto run_finished = std::chrono::system_clock::now();
     const double elapsed_seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - steady_started).count();
     const auto to_seconds = [](gint64 time) { return time < 0 ? 0.0 : static_cast<double>(time) / GST_SECOND; };
     const std::filesystem::path report_path = std::filesystem::temp_directory_path() / ("validate-report-" + scenario_name + ".json");
-    const bool run_failed = context.failed || (expectTimestampAnomaly != context.timestamp_failed);
-    // A mismatch in anomaly expectation is a test failure even when GStreamer itself ran cleanly.
+    const bool timestamp_expectation_failed = expectTimestampAnomaly != context.timestamp_failed;
+    bool expected_timestamp_report_seen = false;
+    bool unexpected_validate_report_seen = false;
+    {
+        std::lock_guard<std::mutex> lock(context.validate_report_mutex);
+        expected_timestamp_report_seen = context.expected_timestamp_report_seen;
+        unexpected_validate_report_seen = context.unexpected_validate_report_seen;
+    }
+    const bool runner_failed = unexpected_validate_report_seen ||
+        (validate_exit_status != 0 && !expected_timestamp_report_seen);
+    const bool validation_failed = !context.scenario_completed || runner_failed ||
+                                   timestamp_expectation_failed;
+    const bool run_failed = context.failed || validation_failed;
+    if (!context.scenario_completed) {
+        std::cerr << "GStreamer validation scenario did not complete all actions.\n";
+    }
+    if (runner_failed) {
+        std::cerr << "GStreamer Validate reported scenario failures (exit status "
+                  << validate_exit_status << ").\n";
+    }
+    // Expected timestamp anomalies are accepted only when the timestamp probe detects them.
     write_report(report_path, runner, context, scenario_name, absolute_path, context.failed,
+                 validation_failed, validate_exit_status,
                  utc_timestamp(run_started), utc_timestamp(run_finished), elapsed_seconds,
                  to_seconds(context.media_duration), to_seconds(context.final_position));
     gst_debug_remove_log_function_by_data(&context);
