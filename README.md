@@ -1,4 +1,4 @@
-# GStreamer Pipeline Validation Framework
+# rdk-halif-test-L4-Vendor
 
 `l4-rdk-audio-video` is a Yocto-built RDK test package for validating GStreamer pipelines on platform-specific devices.
 
