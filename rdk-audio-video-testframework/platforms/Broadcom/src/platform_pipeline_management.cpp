@@ -29,18 +29,23 @@ public:
         const std::filesystem::path path(videoPath);
         const std::string absolutePath =
             std::filesystem::absolute(path).lexically_normal().string();
-        const std::string& demuxElement = path.extension() == ".ts"
-                                              ? configuration.tsDemuxElement
-                                              : configuration.mp4DemuxElement;
+        const bool isTransportStream = path.extension() == ".ts";
+        const std::string& demuxElement = isTransportStream
+                              ? configuration.tsDemuxElement
+                              : configuration.mp4DemuxElement;
+        const std::string& demuxLink = isTransportStream
+                           ? configuration.tsDemuxLink
+                           : configuration.mp4DemuxLink;
         if (configuration.videoFilter.empty()) {
             throw std::runtime_error("Broadcom video_filter is required");
         }
         std::string pipeline = configuration.scenarioSourceElement +
                                " location=\"" + absolutePath + "\"";
         if (!demuxElement.empty()) {
-            pipeline += " ! " + demuxElement;
+            pipeline += " ! " + demuxElement + " name=demux " + demuxLink;
         }
-        pipeline += " ! " + configuration.videoFilter + " name=timestamp_output";
+        pipeline += " ! " + configuration.videoFilter +
+                    " ! identity name=timestamp_output";
         if (!configuration.videoSink.empty()) {
             pipeline += " ! " + configuration.videoSink;
         }
