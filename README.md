@@ -8,7 +8,7 @@ For comprehensive test coverage details, see [L4 Test Cases](docs/L4_Test_Cases.
 
 ## Documentation
 
-- [Overview](docs/L4_Overview.md): purpose, GST-Validate Integration, design goals, execution flow.
+- [Overview](docs/L4_Overview.md): purpose, design goals, execution flow.
 - [Dependencies](docs/L4_Dependencies.md): CMake dependency integration, UT Core sources, Yocto inputs, and packaged dependencies.
 - [Build Steps](docs/L4_Build_Steps.md): runtime configuration, Yocto build and deployment, device verification, and adding a test group.
 - [Mediaplayback_High-Level_TestSpec](docs/L4_mediaplayback_High-Level_TestSpec.md): Architecture
