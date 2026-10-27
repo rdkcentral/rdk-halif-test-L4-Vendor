@@ -1,4 +1,4 @@
-## High-Level Architecture
+# High-Level Architecture
 
 ```mermaid
 flowchart LR
