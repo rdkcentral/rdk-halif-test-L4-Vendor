@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: RDK Vendor Test Utils <vendor-test-utils@rdkcentral.com>
+Date: Thu, 17 Sep 2026 00:00:00 +0000
+Subject: [PATCH] allocator: skip durable pointer alignment assertion on 32-bit
+
+The durable allocator is not used by UT control's KVP parser. Its persistent
+layout assertion assumes that pointer-sized fields are 8-byte aligned, which
+is not true for the 32-bit ARM ABI used by the lib32 target.
+
+Keep the layout check for 64-bit builds and allow the library to compile for
+32-bit consumers such as UT control.
+
+Upstream-Status: Inappropriate [target-specific build compatibility]
+---
+ src/allocator/fy-allocator-durable.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/allocator/fy-allocator-durable.h b/src/allocator/fy-allocator-durable.h
+--- a/src/allocator/fy-allocator-durable.h
++++ b/src/allocator/fy-allocator-durable.h
+@@ -126,6 +126,8 @@
+ _Static_assert(offsetof(struct fy_durable_chunk_hdr, flags) % 8 == 0, "flags must be 8-byte aligned");
+ _Static_assert(offsetof(struct fy_durable_chunk_hdr, next) % 8 == 0, "next must be 8-byte aligned");
++#if UINTPTR_MAX > UINT32_MAX
+ _Static_assert(offsetof(struct fy_durable_chunk_hdr, next_chunk) % 8 == 0, "next_chunk must be 8-byte aligned");
++#endif
+ _Static_assert(offsetof(struct fy_durable_verify_slot, generation) % 8 == 0, "slot generation must be 8-byte aligned");
+ _Static_assert(sizeof(struct fy_durable_verify_slot) == 64, "verify slot must be 64 bytes");
