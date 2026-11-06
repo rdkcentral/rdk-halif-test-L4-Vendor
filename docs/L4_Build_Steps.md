@@ -120,7 +120,7 @@ docker cp <container_name>:/l4-rdk-audio-video/build-arm/device/l4-rdk-audio-vid
 Log into the target device and extract the tarball:
 ```bash
 ssh root@target-device
-cd /home/opt
+cd /opt
 tar -xzf l4-rdk-audio-video.tar.gz
 ```
 
