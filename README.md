@@ -14,5 +14,5 @@ For initial setup, environment configuration, and build instructions, please ref
 ## Architecture
 
 For HLD, E2E Architecture and E2E Execution Flow, please refer to the AV VTS Test Spec documentation.
-- [AV VTS Test Spec](docs/L4_mediaplayback_High-Level_TestSpec.md)
+- [AV VTS Test Spec](docs/L4_High-Level_TestSpec.md)
 
