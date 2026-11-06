@@ -1,14 +1,18 @@
 # rdk-halif-test-L4-Vendor
 
-`l4-rdk-audio-video` is a Yocto-built RDK test package for validating GStreamer pipelines on platform-specific devices.
+This module brings all L4 Audio-Video VTS required Tests.
 
 ## Test Documentation
 
 For comprehensive test coverage details, see [L4 Test Cases](docs/L4_Test_Cases.md).
 
-## Documentation
+## Build Steps
 
-- [Overview](docs/L4_Overview.md): purpose, design goals, execution flow.
-- [Dependencies](docs/L4_Dependencies.md): CMake dependency integration, UT Core sources, Yocto inputs, and packaged dependencies.
-- [Build Steps](docs/L4_Build_Steps.md): runtime configuration, Yocto build and deployment, device verification, and adding a test group.
-- [Mediaplayback_High-Level_TestSpec](docs/L4_mediaplayback_High-Level_TestSpec.md): Architecture
+For initial setup, environment configuration, and build instructions, please refer to the AV VTS README documentation.
+- [AV VTS Build Steps](docs/L4_Build_Steps.md)
+
+## Architecture
+
+For HLD, E2E Architecture and E2E Execution Flow, please refer to the AV VTS Test Spec documentation.
+- [AV VTS Test Spec](docs/L4_mediaplayback_High-Level_TestSpec.md)
+

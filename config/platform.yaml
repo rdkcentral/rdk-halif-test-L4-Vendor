@@ -1,0 +1,32 @@
+# Runtime configuration for the selected platform and scenario media.
+platform: amlogic
+
+media:
+  test_url: file:///usr/share/rdk/l4-rdk-audio-video/video-inputs/BigBuckBunny.mp4
+  pause_video: /usr/share/rdk/l4-rdk-audio-video/video-inputs/bigbuck-clean-20s.mp4
+  forward_seek_video: /usr/share/rdk/l4-rdk-audio-video/video-inputs/BigBuckBunny.mp4
+
+# Element factories and demux links used by platform pipeline construction.
+elements:
+  source_element: playbin
+  decoder_element: vah264dec
+  scenario_source_element: filesrc
+  mp4_demux_element: qtdemux
+  ts_demux_element: tsdemux
+  mp4_demux_link: demux.video_0
+  ts_demux_link: demux.
+  video_convert_element: videoconvert
+  audio_sink: amlhalasink
+  video_sink: westerossink
+  # Optional filters may be empty; use "" for an empty value.
+  audio_filter: ""
+  video_filter: brcmvidfilter
+
+playback:
+  volume: 1.0
+  mute: false
+
+verification:
+  allowed_frame_drops: 0
+  # Timing threshold in milliseconds.
+  av_sync_tolerance_ms: 100
