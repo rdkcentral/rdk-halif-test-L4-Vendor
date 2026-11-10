@@ -5,6 +5,7 @@
 # The SDK environment supplies CC/CXX, PKG_CONFIG_* and CONFIG_SITE (cached answers for configure checks
 # that would otherwise need to run target code).
 
+set -e
 . /opt/toolchains/rdk-glibc-x86_64-arm-toolchain/environment-setup-armv7vet2hf-neon-oe-linux-gnueabi
 
 # The SDK puts its own meson (0.61.3, a wrapper script) first on PATH. Use the pinned pip meson instead.
