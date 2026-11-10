@@ -32,7 +32,7 @@ export LD_LIBRARY_PATH="${BASE}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 export L4_CONFIG="${BASE}/etc/platform.yaml"
 export GST_REGISTRY="${GST_REGISTRY:-/tmp/l4-gst-registry.bin}"
 export TMPDIR="${TMPDIR:-/tmp}"
-cd "${BASE}/share/video-inputs" || exit 1
+cd "${BASE}" || exit 1
 exec "${BASE}/bin/l4-rdk-audio-video" "$@"
 """
 
@@ -78,16 +78,11 @@ def referenced_media(text):
         line = line.strip()
         if not line or line.startswith("#") or ":" not in line:
             continue
-        key, value = line.split(":", 1)
-        if key.strip() not in ("test_url", "pause_video", "forward_seek_video"):
-            continue
         value = value.strip().strip('"')
         if value.startswith("file://"):
             value = value[len("file://"):]
         if value.startswith(DEVICE_VIDEO_DIR + "/"):
             names.append(os.path.basename(value))
-        elif "/" not in value and "\\" not in value:
-            names.append(value)
     return names
 
 
