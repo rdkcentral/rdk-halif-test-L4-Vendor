@@ -2,9 +2,9 @@
 platform: amlogic
 
 media:
-  test_url: file:///usr/share/rdk/l4-rdk-audio-video/video-inputs/BigBuckBunny.mp4
-  pause_video: /usr/share/rdk/l4-rdk-audio-video/video-inputs/bigbuck-clean-20s.mp4
-  forward_seek_video: /usr/share/rdk/l4-rdk-audio-video/video-inputs/BigBuckBunny.mp4
+  test_url: BigBuckBunny.mp4
+  pause_video: bigbuck-clean-20s.mp4
+  forward_seek_video: BigBuckBunny.mp4
 
 # Element factories and demux links used by platform pipeline construction.
 elements:

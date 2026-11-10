@@ -49,8 +49,8 @@ chmod 600 ~/.netrc
 
     Host github.code.rdkcentral.com
       Hostname github.com
-      User
-      IdentityFile ~/.ssh/
+      User <username>
+      IdentityFile ~/.ssh/id_rsa
 
 - The instruction to generate SSH key for GitHub:
 

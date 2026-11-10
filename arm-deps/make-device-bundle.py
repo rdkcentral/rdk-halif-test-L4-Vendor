@@ -83,6 +83,8 @@ def referenced_media(text):
             value = value[len("file://"):]
         if value.startswith(DEVICE_VIDEO_DIR + "/"):
             names.append(os.path.basename(value))
+        elif "/" not in value and "\\" not in value:
+            names.append(value)
     return names
 
 
