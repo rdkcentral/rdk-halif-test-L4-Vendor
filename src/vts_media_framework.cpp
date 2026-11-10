@@ -264,9 +264,9 @@ bool RDKAudioVideo::runScenario(const L4Configuration& configuration,
     g_signal_connect(bus.get(), "message", G_CALLBACK(handle_bus_message), &context);
     if (gst_element_set_state(pipeline.get(), GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
         context.failed = true;
-        g_main_loop_quit(loop.get());
+    } else {
+        g_main_loop_run(loop.get());
     }
-    g_main_loop_run(loop.get());
     gst_element_set_state(pipeline.get(), GST_STATE_NULL);
     const int gst_validate_exit_code = gst_validate_runner_exit(runner, TRUE);
     const bool run_failed = context.failed || gst_validate_exit_code != 0;

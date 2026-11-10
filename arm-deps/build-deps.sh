@@ -38,7 +38,7 @@ done
 
 rm -rf "${OUT}"
 mkdir -p "${OUT}"
-(cd "${SDKTARGETSYSROOT}" && find . -newer "${MARK}" \( -type f -o -type l \) -print0 | tar --null -T - -cf -) \
+(cd "${SDKTARGETSYSROOT}" && find . -cnewer "${MARK}" \( -type f -o -type l \) -print0 | tar --null -T - -cf -) \
     | tar --no-same-owner -C "${OUT}" -xf -
 
 if [ -n "${HOST_UID}" ] && [ -n "${HOST_GID}" ]; then

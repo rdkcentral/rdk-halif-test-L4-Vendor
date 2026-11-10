@@ -112,7 +112,7 @@ build_libffi() {
 
 build_pcre() {
     # PCRE 8.x, the release GLib 2.66 links against (libpcre). Taken from the Ubuntu archive.
-    fetch http://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/pcre3_8.39.orig.tar.bz2 pcre.tar.bz2
+    fetch https://archive.ubuntu.com/ubuntu/pool/main/p/pcre3/pcre3_8.39.orig.tar.bz2 pcre.tar.bz2
     run tar -C "${WORK}" -xf "${WORK}/pcre.tar.bz2"
     autotools "${WORK}/pcre-8.39" --enable-utf8 --enable-unicode-properties --disable-cpp --disable-static
 }

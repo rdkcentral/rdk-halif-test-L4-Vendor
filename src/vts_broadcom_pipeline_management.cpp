@@ -41,6 +41,7 @@ void attachSink(GstElement* playbin, const char* property, const std::string& fa
         gst_object_unref(playbin);
         throw std::runtime_error("Could not create sink element: " + factoryName);
     }
+    gst_object_ref_sink(sink);
     g_object_set(playbin, property, sink, nullptr);
     gst_object_unref(sink);
 }
