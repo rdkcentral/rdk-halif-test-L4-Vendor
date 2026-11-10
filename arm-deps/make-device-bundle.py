@@ -78,7 +78,10 @@ def referenced_media(text):
         line = line.strip()
         if not line or line.startswith("#") or ":" not in line:
             continue
-        value = line.split(":", 1)[1].strip().strip('"')
+        key, value = line.split(":", 1)
+        if key.strip() not in ("test_url", "pause_video", "forward_seek_video"):
+            continue
+        value = value.strip().strip('"')
         if value.startswith("file://"):
             value = value[len("file://"):]
         if value.startswith(DEVICE_VIDEO_DIR + "/"):
