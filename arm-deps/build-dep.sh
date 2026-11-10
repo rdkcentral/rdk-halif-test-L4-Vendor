@@ -195,6 +195,7 @@ build_curl() {
 
 build_libfyaml() {
     # Pinned to the libfyaml_git.bb SRCREV, with the same 32-bit allocator patch.
+    run rm -rf "${WORK}/libfyaml"
     run git clone --quiet https://github.com/pantoniou/libfyaml.git "${WORK}/libfyaml"
     cd "${WORK}/libfyaml"
     run git checkout --quiet 1a850a82b3b4ce1e21e4dedb15c7fa677ba2a6c5
