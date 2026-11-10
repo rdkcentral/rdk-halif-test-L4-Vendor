@@ -32,7 +32,7 @@ export LD_LIBRARY_PATH="${BASE}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 export L4_CONFIG="${BASE}/etc/platform.yaml"
 export GST_REGISTRY="${GST_REGISTRY:-/tmp/l4-gst-registry.bin}"
 export TMPDIR="${TMPDIR:-/tmp}"
-cd "${BASE}" || exit 1
+cd "${BASE}/share/video-inputs" || exit 1
 exec "${BASE}/bin/l4-rdk-audio-video" "$@"
 """
 
