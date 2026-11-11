@@ -1,3 +1,36 @@
+# L4 Testcases 
+
+## Table of Contents
+
+- [Overview](#overview)
+- [AV Playback](#10-av-playback)
+  - [Normal AV playback](#11-normal-av-playback)
+  - [Audio only](#12-audio-only)
+  - [Video only](#13-video-only)
+- [Pause / Resume](#20-pause_resume)
+  - [Audio and video combined](#21-audio--video-combined)
+  - [Audio Only](#22-audio-only)
+  - [Video Only](#23-video-only)
+- [Trick mode](#30-trick-modes-fast-forward--rewind)
+  - [Audio and video combined](#31-audio--video-combined)
+  - [Audio Only](#32-audio-only)
+  - [Video Only](#33-video-only)
+- [Forward Seek](#40-forward-seek)
+  - [Audio and video combined](#41-audio--video-combined)
+  - [Audio Only](#42-audio-only)
+  - [Video Only](#43-video-only)
+- [Backward Seek](#50-backward-seek)
+  - [Audio and video combined](#51-audio--video-combined)
+  - [Audio Only](#52-audio-only)
+  - [Video Only](#53-video-only)
+- [Adaptive Bitrate (ABR) Streaming](#60-resolution_switch_abr)
+  - [Low-to-High Bitrate](#61-low-to-high-bitrate)
+  - [High-to-Low Bitrate](#62-high-to-low-bitrate)
+- [HDR Metadata Propagation](#70-metadata-propagation)
+- [Metrics to be validated](#metrics-to-be-validated)
+- [Gst-validate-launcher Metrics being validated](#gst-validate-launcher-metrics-being-validated)
+
+
 ## Overview
 This document defines a comprehensive media playback validation test cases for L4 with validation methods and metrics used for validation.
 The objective of these test cases is to verify correct media pipeline behavior, decoder functionality, rendering, synchronization, and playback stability during normal playback, pause& resume, forward seek, backward seek and trickmodes across supported stream formats and codec combinations.
