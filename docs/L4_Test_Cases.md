@@ -31,6 +31,7 @@
   - [Validation-Pre-Conditions](#validation-pre-conditions)
   - [Additional-validation-methods](#Additional-validation-methods)
 - [Metrics to be validated](#metrics-to-be-validated)
+  - [Metrics to be discussed with SKY Team](#metrics-to-be-discussed-with-sky-team)
 - [Gst-validate-launcher Metrics being validated](#gst-validate-launcher-metrics-being-validated)
 
 ## Overview
@@ -408,6 +409,27 @@ Provide a standardized set of metrics and validation parameters used to assess m
 | HDR Output | hdr_output_mode | SoC | Must match expected HDR mode | Verifies display switches to correct HDR mode. |
 | Video Format | output_bit_depth | Generic / SoC | Expected 10-bit for applicable HDR formats | Prevents unintended 10-bit → 8-bit conversion. |
 | Video Format | output_pixel_format | Generic / SoC | Expected format (e.g. P010) | Verifies decoder/display HDR buffer format. |
+
+### Metrics to be discussed with SKY Team
+
+| Category | Metric / Parameter | Type | Is currently available RDK |
+| --- | --- | --- |---|
+| Buffering | underflow | Generic / SoC | Yes |
+| Audio Quality | silence | SoC | No |
+| Decoder | decode_error | Generic / SoC | Yes |
+| Startup | first_frame_presented | SoC | Yes |
+| Video Quality | video_frame_drop | Generic / SoC | Yes |
+| Video Quality | video_frame_freeze | SoC | No |
+| Audio Quality | audio_gap | SoC | No |
+| FRC / Display | frc_frame_drop | SoC | No | 
+| Video Quality | video_frame_duplicate | Generic / SoC | No |
+| Video Quality | corrupted_frame | SoC | No |
+| A/V Sync | av_sync_error | SoC | No |
+| Hardware | hardware_decode_active | SoC | No |
+| Hardware | dmabuf_active | SoC | No |
+| HDR Output | hdr_output_mode | SoC | No |
+| Video Format | output_bit_depth | Generic / SoC | No |
+| Video Format | output_pixel_format | Generic / SoC | No |
 
 ## Gst-validate-launcher Metrics being validated
 
