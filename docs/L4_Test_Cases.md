@@ -27,11 +27,11 @@
   - [Low-to-High Bitrate](#61-low-to-high-bitrate)
   - [High-to-Low Bitrate](#62-high-to-low-bitrate)
 - [HDR Metadata Propagation](#70-metadata-propagation)
-- [Metrics to be validated](#metrics-to-be-validated)
-- [Gst-validate-launcher Metrics being validated](#gst-validate-launcher-metrics-being-validated)
 - [Validation-Methods](#validation-methods)
   - [Validation-Pre-Conditions](#validation-pre-conditions)
   - [Additional-validation-methods](#Additional-validation-methods)
+- [Metrics to be validated](#metrics-to-be-validated)
+- [Gst-validate-launcher Metrics being validated](#gst-validate-launcher-metrics-being-validated)
 
 ## Overview
 This document defines a comprehensive media playback validation test cases for L4 with validation methods and metrics used for validation.
