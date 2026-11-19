@@ -378,7 +378,7 @@ The following criteria apply to all test cases unless explicitly stated otherwis
 |VTS_L4_DVISION_2001 | Verify Dolby Vision stream/profile signalling is detected consistently throughout playback. Verify BT.2020 colour primaries where applicable.|
 |VTS_L4_META_CONSISTENCY_2001 | Play the stream from start to end 10 times, record HDR mode and colour primaries for every frame, and compare the records to verify consistency within and across all 10 plays. |
 
-## Metrics to be validation
+## Metrics to be validated
 **Purpose:**
 Provide a standardized set of metrics and validation parameters used to assess media pipeline health, decoder performance, playback quality, A/V synchronization, HDR behavior, buffering stability, and hardware acceleration across all L4 playback test cases.
 
