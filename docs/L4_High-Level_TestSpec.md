@@ -2,7 +2,6 @@
 
 | Item | Detail |
 |---|---|
-| Document ID | `L4-AV-DD-001` |
 | Component | `rdk-halif-test-L4-Vendor` (binary `l4-rdk-audio-video`) |
 | Version | `0.1` |
 | Status | Draft for customer review |
@@ -42,7 +41,7 @@ This document describes the L4 Audio-Video (AV) pipeline test framework: how a t
 | playbin | GStreamer high-level playback element |
 | UT Core | Unit-test framework that registers suites and tests, runs them, and prints the run summary |
 | RAFT | Python test framework that connects to devices, deploys artifacts, runs tests, and collects results |
-| Bundle | Self-contained tar.gz for the device, built by `arm-deps/make-device-bundle.py` |
+| Bundle | Self-contained tar.gz for the device |
 | EOS | End of stream |
 | TC ID | Test case identifier in `docs/L4_Test_Cases.md` |
 
@@ -51,7 +50,7 @@ This document describes the L4 Audio-Video (AV) pipeline test framework: how a t
 - [L4 Build Steps](L4_Build_Steps.md): build and manual run instructions.
 - [L4 Stream Mapping](L4_Stream_Mapping.md): test case to stream mapping, with the streams Sky must confirm.
 - `config/platform.yaml`, `av_test_configurations/*.yaml`, `scenarios/*.scenario`: runtime inputs.
-- `CMakeLists.txt`, `arm-deps/make-device-bundle.py`: build inputs.
+
 
 ---
 
@@ -63,7 +62,7 @@ The functional requirements are derived from the use cases in [L4 Test Cases](L4
 
 The **Coverage** column shows what the code implements today:
 
-- **Configured (placeholder)**: the test case is in the AV test configuration with its stream. Its scenario file is a placeholder that plays the stream to the end. The operation in the test case is not written yet (LLD section 4.2.4).
+- **Configured **: the test case is in the AV test configuration with its stream. The operation in the test case is not written yet (LLD section 4.2.4).
 - **Engine supported**: the scenario engine can run this kind of scenario, but no test is configured for it yet.
 - **Not implemented**: the requirement needs a validator or a capability that does not exist yet.
 
@@ -73,56 +72,56 @@ Pass criteria for each use case are the metrics in the "Metrics to be validated"
 
 | ID | Test cases | Priority | Coverage |
 |---|---|---|---|
-| FR-01 | `VTS_L4_H264_AC3_1001`, `VTS_L4_H265_EAC3_1001`, `VTS_L4_MPEG2_AAC_1001`, `VTS_L4_VP9_AAC_1001`, `VTS_L4_AV1_AAC_1001`, `VTS_L4_H264_AC3_1001_01`, `VTS_L4_H265_EAC3_1001_01` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-02 | `VTS_L4_AAC_1201`, `VTS_L4_AC3_1201`, `VTS_L4_EAC3_1201`, `VTS_L4_EAC3_ATMOS_1201`, `VTS_L4_PCM_1201`, `VTS_L4_OPUS_1201`, `VTS_L4_VORBIS_1201`, `VTS_L4_FLAC_1201`, `VTS_L4_MP3_1201` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-03 | `VTS_L4_H264_1501`, `VTS_L4_HEVC_1501`, `VTS_L4_HEVC_1502`, `VTS_L4_VP9_1501`, `VTS_L4_AV1_1501` | Must | Configured (placeholder scenario); operation not written yet |
+| FR-01 | `VTS_L4_H264_AC3_1001`, `VTS_L4_H265_EAC3_1001`, `VTS_L4_MPEG2_AAC_1001`, `VTS_L4_VP9_AAC_1001`, `VTS_L4_AV1_AAC_1001`, `VTS_L4_H264_AC3_1001_01`, `VTS_L4_H265_EAC3_1001_01` | Must | Configured ; operation not written yet |
+| FR-02 | `VTS_L4_AAC_1201`, `VTS_L4_AC3_1201`, `VTS_L4_EAC3_1201`, `VTS_L4_EAC3_ATMOS_1201`, `VTS_L4_PCM_1201`, `VTS_L4_OPUS_1201`, `VTS_L4_VORBIS_1201`, `VTS_L4_FLAC_1201`, `VTS_L4_MP3_1201` | Must | Configured; operation not written yet |
+| FR-03 | `VTS_L4_H264_1501`, `VTS_L4_HEVC_1501`, `VTS_L4_HEVC_1502`, `VTS_L4_VP9_1501`, `VTS_L4_AV1_1501` | Must | Configured ; operation not written yet |
 
 #### 2.1.2 Pause and resume (test case section 2.0)
 
 | ID | Test cases | Priority | Coverage |
 |---|---|---|---|
 | FR-04 | `VTS_L4_H264_AAC_7001`, `VTS_L4_H264_AC3_7001`, `VTS_L4_H265_EAC3_7001`, `VTS_L4_VP9_OPUS_7001`, `VTS_L4_AV1_AC3_7001` | Must | Configured (`PauseResume.scenario` written) |
-| FR-05 | `VTS_L4_AAC_1301`, `VTS_L4_AC3_1301`, `VTS_L4_EAC3_1301` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-06 | `VTS_L4_H264_1601`, `VTS_L4_HEVC_1601`, `VTS_L4_HEVC_1602`, `VTS_L4_VP9_1601`, `VTS_L4_AV1_1601` | Must | Configured (placeholder scenario); operation not written yet |
+| FR-05 | `VTS_L4_AAC_1301`, `VTS_L4_AC3_1301`, `VTS_L4_EAC3_1301` | Must | Configured ; operation not written yet |
+| FR-06 | `VTS_L4_H264_1601`, `VTS_L4_HEVC_1601`, `VTS_L4_HEVC_1602`, `VTS_L4_VP9_1601`, `VTS_L4_AV1_1601` | Must | Configured; operation not written yet |
 
 #### 2.1.3 Trick modes: fast-forward and rewind (test case section 3.0)
 
 | ID | Test cases | Priority | Coverage |
 |---|---|---|---|
-| FR-07 | `VTS_L4_H264_AAC_7001_01`, `VTS_L4_H264_AC3_7001_01`, `VTS_L4_H265_EAC3_7001_01`, `VTS_L4_VP9_OPUS_7001_01`, `VTS_L4_AV1_AC3_7001_01` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-08 | `VTS_L4_AAC_1301_01`, `VTS_L4_AC3_1301_01`, `VTS_L4_EAC3_1301_01` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-09 | `VTS_L4_H264_1601_01`, `VTS_L4_HEVC_1601_01`, `VTS_L4_HEVC_1602_01`, `VTS_L4_VP9_1601_01`, `VTS_L4_AV1_1601_01` | Must | Configured (placeholder scenario); operation not written yet |
+| FR-07 | `VTS_L4_H264_AAC_7001_01`, `VTS_L4_H264_AC3_7001_01`, `VTS_L4_H265_EAC3_7001_01`, `VTS_L4_VP9_OPUS_7001_01`, `VTS_L4_AV1_AC3_7001_01` | Must | Configured ; operation not written yet |
+| FR-08 | `VTS_L4_AAC_1301_01`, `VTS_L4_AC3_1301_01`, `VTS_L4_EAC3_1301_01` | Must | Configured ; operation not written yet |
+| FR-09 | `VTS_L4_H264_1601_01`, `VTS_L4_HEVC_1601_01`, `VTS_L4_HEVC_1602_01`, `VTS_L4_VP9_1601_01`, `VTS_L4_AV1_1601_01` | Must | Configured ; operation not written yet |
 
 #### 2.1.4 Forward seek (test case section 4.0)
 
 | ID | Test cases | Priority | Coverage |
 |---|---|---|---|
 | FR-10 | `VTS_L4_H264_AAC_7001_02`, `VTS_L4_H264_AC3_7001_02`, `VTS_L4_H265_EAC3_7001_02`, `VTS_L4_VP9_OPUS_7001_02`, `VTS_L4_AV1_AC3_7001_02` | Must | Configured (`SeekForward.scenario` written) |
-| FR-11 | `VTS_L4_AAC_1301_02`, `VTS_L4_AC3_1301_02`, `VTS_L4_EAC3_1301_02` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-12 | `VTS_L4_H264_1601_02`, `VTS_L4_HEVC_1601_02`, `VTS_L4_HEVC_1602_02`, `VTS_L4_VP9_1601_02`, `VTS_L4_AV1_1601_02` | Must | Configured (placeholder scenario); operation not written yet |
+| FR-11 | `VTS_L4_AAC_1301_02`, `VTS_L4_AC3_1301_02`, `VTS_L4_EAC3_1301_02` | Must | Configured; operation not written yet |
+| FR-12 | `VTS_L4_H264_1601_02`, `VTS_L4_HEVC_1601_02`, `VTS_L4_HEVC_1602_02`, `VTS_L4_VP9_1601_02`, `VTS_L4_AV1_1601_02` | Must | Configured ; operation not written yet |
 
 #### 2.1.5 Backward seek (test case section 5.0)
 
 | ID | Test cases | Priority | Coverage |
 |---|---|---|---|
 | FR-13 | `VTS_L4_H264_AAC_7001_03`, `VTS_L4_H264_AC3_7001_03`, `VTS_L4_H265_EAC3_7001_03`, `VTS_L4_VP9_OPUS_7001_03`, `VTS_L4_AV1_AC3_7001_03` | Must | Configured (`SeekBackward.scenario` written) |
-| FR-14 | `VTS_L4_AAC_1301_03`, `VTS_L4_AC3_1301_03`, `VTS_L4_EAC3_1301_03` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-15 | `VTS_L4_H264_1601_03`, `VTS_L4_HEVC_1601_03`, `VTS_L4_HEVC_1602_03`, `VTS_L4_VP9_1601_03`, `VTS_L4_AV1_1601_03` | Must | Configured (placeholder scenario); operation not written yet |
+| FR-14 | `VTS_L4_AAC_1301_03`, `VTS_L4_AC3_1301_03`, `VTS_L4_EAC3_1301_03` | Must | Configured; operation not written yet |
+| FR-15 | `VTS_L4_H264_1601_03`, `VTS_L4_HEVC_1601_03`, `VTS_L4_HEVC_1602_03`, `VTS_L4_VP9_1601_03`, `VTS_L4_AV1_1601_03` | Must | Configured ; operation not written yet |
 
 #### 2.1.6 Adaptive bitrate resolution switching (test case section 6.0)
 
 | ID | Test cases | Priority | Coverage |
 |---|---|---|---|
-| FR-16 | `VTS_L4_H264_AAC_6001_01`, `VTS_L4_H265_EAC3_6001_01`, `VTS_L4_VP9_OPUS_6001_01` | Must | Configured (placeholder scenario); operation not written yet |
-| FR-17 | `VTS_L4_H264_AAC_6002_02`, `VTS_L4_H265_EAC3_6002_02` | Must | Configured (placeholder scenario); operation not written yet |
+| FR-16 | `VTS_L4_H264_AAC_6001_01`, `VTS_L4_H265_EAC3_6001_01`, `VTS_L4_VP9_OPUS_6001_01` | Must | Configured; operation not written yet |
+| FR-17 | `VTS_L4_H264_AAC_6002_02`, `VTS_L4_H265_EAC3_6002_02` | Must | Configured; operation not written yet |
 
 #### 2.1.7 Metadata propagation (test case section 7.0)
 
 | ID | Test cases | Priority | Coverage |
 |---|---|---|---|
-| FR-18 | `VTS_L4_HDR10_2001`, `VTS_L4_HDR10P_2001`, `VTS_L4_HLG_2001`, `VTS_L4_SDR_2001`, `VTS_L4_DVISION_2001` | Must | Configured (placeholder); caps validator not implemented |
-| FR-19 | `VTS_L4_META_FIELDS_2001` | Must | Configured (placeholder); caps validator not implemented |
-| FR-20 | `VTS_L4_META_CONSISTENCY_2001` | Must | Configured (placeholder); caps validator not implemented |
+| FR-18 | `VTS_L4_HDR10_2001`, `VTS_L4_HDR10P_2001`, `VTS_L4_HLG_2001`, `VTS_L4_SDR_2001`, `VTS_L4_DVISION_2001` | Must | Configured ; caps validator not implemented |
+| FR-19 | `VTS_L4_META_FIELDS_2001` | Must | Configured ; caps validator not implemented |
+| FR-20 | `VTS_L4_META_CONSISTENCY_2001` | Must | Configured ; caps validator not implemented |
 
 #### 2.1.8 Framework requirements
 
@@ -152,7 +151,7 @@ Pass criteria for each use case are the metrics in the "Metrics to be validated"
 - Cross-compilation: the ARM SDK environment (`SDKTARGETSYSROOT`) must be sourced before the bundle is built.
 - The Python host uses the RAFT framework (`python_raft`, `ut-raft`, `rdk_raft`), an external dependency pinned in `build_dependencies.sh` of the unified VTS repository.
 - **The AV test configuration and the stream configuration are provisioned on the device** under `<install base>/av_test_configurations/`. The bundle does not carry them, and the host does not copy them. The host reads the same files from the repository only to plan the run.
-- Stream files are downloaded to the DUT by the host (RAFT `downloadToDevice`), from `AVModule.stream_download_path` plus each stream's relative path, into `AVModule.input_streams_path`. They are deleted after each test. The bundle's `video-inputs/` is kept as it is.
+- Stream files are downloaded to the DUT by the host (RAFT `downloadToDevice`), from `AVModule.stream_download_path` plus each stream's relative path, into `AVModule.input_streams_path`. They are deleted after each test.
 - Scenario files (`scenarios/*.scenario`) must be on the DUT under the install base, in the folder named by `AVModule.scenario_dir`.
 - The device binary runs one test at a time.
 
@@ -170,7 +169,7 @@ Pass criteria for each use case are the metrics in the "Metrics to be validated"
 | D-04 Suite and test registration | UT Core suites per use case; tests `Test1` to `Test32` registered at build time; a test runs the configuration entry with its suite and name | Register tests from the configuration at run time | UT Core registers tests at build time; a fixed name range keeps the menu stable |
 | D-05 Playback control | Each test runs a GstValidate scenario file on the platform pipeline. The scenario is read on the DUT at run time | Hand-written GLib timers and seeks per test (earlier design) | Scripts are data; GstValidate provides the actions and monitors |
 | D-06 Host orchestration | Python RAFT test scoped to AV suites; runs one test at a time through the UT Core menu | Run the binary once for all tests | Same result path as the existing VTS suites (FR-26) |
-| D-07 Packaging | One bundle with binary, libraries, platform configuration, and stream files | Install into system directories | The device needs no development packages; paths are fixed relative to the bundle |
+| D-07 Packaging | One bundle with binary, libraries, platform configuration and scenario files | Install into system directories | The device needs no development packages; paths are fixed relative to the bundle |
 
 ### 3.2 High-level design (HLD)
 
@@ -180,10 +179,8 @@ flowchart TB
         cmake["CMake build<br/>(one platform source)"]
         bundle["arm-deps/make-device-bundle.py"]
         cfg_src[("config/platform.yaml")]
-        vid_src[("video-inputs/")]
         cmake --> bundle
         cfg_src --> bundle
-        vid_src --> bundle
     end
 
     subgraph host["Test host (Python RAFT, AV scope)"]
@@ -251,7 +248,6 @@ The low-level design is in a separate document: [L4 AV Low-Level Design](L4_AV_L
 ## 6. Performance and resource considerations
 - **Timeouts.** The scenario watchdog is the stream length plus 120 s. The host estimates each test's wait from its streams, a 60 s margin, and 60 s per stream for the download. The download is not in the binary's watchdog.
 - **Serial execution.** Tests run one after another on one device, each as a menu selection. The GstValidate runner is created once per process.
-- **Storage.** The bundle carries every stream file in `video-inputs/`. Reduce it to the files the configuration uses.
 - **Memory.** Each stream creates and releases its own pipeline.
 
 ---
