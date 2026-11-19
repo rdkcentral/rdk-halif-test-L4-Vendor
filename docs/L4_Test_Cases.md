@@ -375,6 +375,7 @@ Validate that the stream reports the correct DynamicRange and color metadata for
 |VTS_L4_HLG_2001 | Verify negotiated caps indicate HLG signalling (transfer=arib-std-b67) and BT.2020 colour primaries throughout playback.|
 |VTS_L4_SDR_2001 | Verify negotiated caps indicate SDR signalling and no HDR-specific metadata is present.|
 |VTS_L4_DVISION_2001 | Verify Dolby Vision stream/profile signalling is detected consistently throughout playback. Verify BT.2020 colour primaries where applicable.|
+|VTS_L4_META_CONSISTENCY_2001 | Play the stream from start to end 10 times, record HDR mode and colour primaries for every frame, and compare the records to verify consistency within and across all 10 plays. |
 
 ## Metrics to be validation
 **Purpose:**
