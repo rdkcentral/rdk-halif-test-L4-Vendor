@@ -412,7 +412,7 @@ Provide a standardized set of metrics and validation parameters used to assess m
 
 ### Metrics to be discussed with SKY Team
 
-| Category | Metric / Parameter | Type | Is currently available RDK |
+| Category | Metric / Parameter | Type | Is currently available in RDK |
 | --- | --- | --- |---|
 | Buffering | underflow | Generic / SoC | Yes |
 | Audio Quality | silence | SoC | No |
