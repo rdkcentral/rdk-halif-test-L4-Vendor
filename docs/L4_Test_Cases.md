@@ -23,7 +23,7 @@
   - [Audio and video combined](#51-audio--video-combined)
   - [Audio Only](#52-audio-only)
   - [Video Only](#53-video-only)
-- [Adaptive Bitrate (ABR) Streaming](#60-resolution_switch_abr)
+- [Adaptive Bitrate (ABR) Streaming](#60-adaptive-bitrate-resolution-switching)
   - [Low-to-High Bitrate](#61-low-to-high-bitrate)
   - [High-to-Low Bitrate](#62-high-to-low-bitrate)
 - [HDR Metadata Propagation](#70-metadata-propagation)
@@ -86,13 +86,13 @@ Validate audio-only decoder lifecycle, buffer queueing, flush/EOS handling, and 
 | TC ID  | Test case description | Video Codec | Audio Codec | Expected behaviour  | Validation caps | Stream |
 |---|---|---|---|---|---|---|
 | VTS_L4_AAC_1201 | Verify AAC playback by validating decoder lifecycle, buffer flow, A/V synchronization, callback handling, and correct EOS processing throughout the playback session. | NA | AAC | Playback should happen without any  decoding errors and complets with out any errors | Audio Caps:<br>audio/x-aac<br>framed=(boolean)true,<br>rate=(int)11025,<br> channels=(int)2 | vts_aac_11.025k_2ch_64k_a647_v0_60sec.mp4 |
-| VTS_L4_AC3_1201 | Verify AC3 playback by validating buffer flow, callback handling, and correct EOS processing throughout the playback session in passthru | NA | AC-3 | Verify that AC3 audio streams  with proper codec configuration, encoded buffers, timestamps are forwarded correctly to the decoder, ensuring successful decoding without data loss, corruption, or timestamp discontinuities. | Audio Caps:<br>audio/x-ac3<br>framed=(boolean)true,<br>rate=(int)32000,<br> channels=(int)2 | vts_ac3_32k_2ch_128k_a1250_v0_60sec.mp4 |
-| VTS_L4_EAC3_1201 | Verify EAC3 playback by validating buffer flow, callback handling, and correct EOS processing throughout the playback session in passthru mode | NA | E-AC-3 | Verify that EAC3 audio streams  with proper codec configuration, encoded buffers, timestamps are forwarded correctly to the decoder, ensuring successful decoding without data loss, corruption, or timestamp discontinuities. | Audio Caps:<br>audio/x-eac3<br>framed=(boolean)true,<br>rate=(int)32000,<br> channels=(int)3 |  vts_eac3_32k_3ch_128k_a1250_v0_60sec.mp4 |
+| VTS_L4_AC3_1201 | Verify AC3 playback by validating buffer flow, callback handling, and correct EOS processing throughout the playback session in passthru | NA | AC3 | Verify that AC3 audio streams  with proper codec configuration, encoded buffers, timestamps are forwarded correctly to the decoder, ensuring successful decoding without data loss, corruption, or timestamp discontinuities. | Audio Caps:<br>audio/x-ac3<br>framed=(boolean)true,<br>rate=(int)32000,<br> channels=(int)2 | vts_ac3_32k_2ch_128k_a1250_v0_60sec.mp4 |
+| VTS_L4_EAC3_1201 | Verify EAC3 playback by validating buffer flow, callback handling, and correct EOS processing throughout the playback session in passthru mode | NA | EAC3 | Verify that EAC3 audio streams  with proper codec configuration, encoded buffers, timestamps are forwarded correctly to the decoder, ensuring successful decoding without data loss, corruption, or timestamp discontinuities. | Audio Caps:<br>audio/x-eac3<br>framed=(boolean)true,<br>rate=(int)32000,<br> channels=(int)3 |  vts_eac3_32k_3ch_128k_a1250_v0_60sec.mp4 |
 | VTS_L4_EAC3_ATMOS_1201 | Verify EAC3 Atmos playback by validating buffer flow, callback handling, and correct EOS processing throughout the playback session in passthru mode | NA | EAC3 with Atmos | Verify that EAC3 Atmos audio streams  with proper codec configuration, encoded buffers, timestamps are forwarded correctly to the decoder, ensuring successful decoding without data loss, corruption, or timestamp discontinuities. | Audio Caps:<br>audio/x-eac3<br>framed=(boolean)true,<br>rate=(int)32000,<br> channels=(int)2 | vts_eac3_atmos_32k_2ch_128k_a1250_v0_60sec.mp4 |
 | VTS_L4_PCM_1201 | Verify PCM audio playback by validating buffer flow, callback handling, and correct EOS processing throughout the playback session. | NA | PCM | PCM audio only streams  playback completes with out any errors |Audio Caps: audio/x-raw<br>framed=(boolean)true,<br>rate=(int)44100,<br> channels=(int)2 | vts_pcm_44.1k_2ch_a2584_v0_60sec.mp4 |
-| VTS_L4_OPUS_1201 | Verify AAC playback by validating decoder lifecycle, buffer flow, A/V synchronization, callback handling, and correct EOS processing throughout the playback session. | NA | Opus | Opus audio only streams decoding completes successfully and playback completes with out any errors |Audio Caps: audio/x-opus<br>framed=(boolean)true,<br>rate=(int)12000,<br> channels=(int)2 | vts_opus_12k_2ch_128k_a3001_v0_61sec.webm |
+| VTS_L4_OPUS_1201 | Verify Opus playback by validating decoder lifecycle, buffer flow, A/V synchronization, callback handling, and correct EOS processing throughout the playback session. | NA | Opus | Opus audio only streams decoding completes successfully and playback completes with out any errors |Audio Caps: audio/x-opus<br>framed=(boolean)true,<br>rate=(int)12000,<br> channels=(int)2 | vts_opus_12k_2ch_128k_a3001_v0_61sec.webm |
 | VTS_L4_VORBIS_1201 | Verify Vorbis playback by validating decoder lifecycle, buffer flow, A/V synchronization, callback handling, and correct EOS processing throughout the playback session. | NA | Vorbis | Audio only streams decoding completes successfully and playback completes with out any errors |Audio Caps: audio/x-vorbis<br>framed=(boolean)true,<br>rate=(int)44100,<br> channels=(int)2 | vts_vorbis_44.1k_2ch_128k_a2586_v0_61sec.webm |
-| VTS_L4_FLAC_1201 | Verify FLAC playback by validating decoder lifecycle, buffer flow, A/V synchronization, callback handling, and correct EOS processing throughout the playback session. | NA | FLAC | Audio only streams decoding completes successfully and playback completes with out any errors |Audio Caps: audio/x-flacc<br>framed=(boolean)true,<br>rate=(int)44100,<br> channels=(int)2 | vts_flac_44.1k_2ch_a575_v0_60sec.mp4 |
+| VTS_L4_FLAC_1201 | Verify FLAC playback by validating decoder lifecycle, buffer flow, A/V synchronization, callback handling, and correct EOS processing throughout the playback session. | NA | FLAC | Audio only streams decoding completes successfully and playback completes with out any errors |Audio Caps: audio/x-flac<br>framed=(boolean)true,<br>rate=(int)44100,<br> channels=(int)2 | vts_flac_44.1k_2ch_a575_v0_60sec.mp4 |
 | VTS_L4_MP3_1201 | Verify MP3 playback by validating decoder lifecycle, buffer flow, A/V synchronization, callback handling, and correct EOS processing throughout the playback session. | NA | MP3 | Audio only streams decoding completes successfully and playback completes with out any errors |Audio Caps: audio/x-mp3<br>framed=(boolean)true,<br>rate=(int)16000,<br> channels=(int)2 | vts_mp3_16k_2ch_128k_a1669_v0_60sec.mp4 |
 
 ### 1.3 Video only
@@ -264,7 +264,7 @@ Validate the video-only backward seek pipeline for correct seek and flush event 
 | VTS_L4_VP9_1601_03 | Verify VP9 video-only playback in a WebM container can seek backward successfully | VP9 | N/A | Each backward seek completes without error, and all applicable events (seek, flush) are triggered correctly. After each seek, playback starts from the expected position, including when the target is not at a seek index point of the WebM file. After each seek, frame drops remain within the acceptable threshold. Playback after the last seek runs to EOS, which is signalled once. | **Video Caps:**<br>video/x-vp9<br>alignment=au<br>width=(int)3840,<br>height=(int)2160,<br>framerate=(fraction)60/1 | vts_vp9_2160p_sdr_60.0f_BT709_yuv420p_15M_a0_v3600_60sec.webm |
 | VTS_L4_AV1_1601_03 | Verify AV1 4K HDR10 video-only playback can seek backward successfully | AV1 | N/A | Each backward seek completes without error, and all applicable events (seek, flush) are triggered correctly. After each seek, playback starts from the expected position. After each seek, the HDR10 metadata (content light level, color primaries) is still present and unchanged. After each seek, frame drops remain within the acceptable threshold. Playback after the last seek runs to EOS, which is signalled once. | **Video Caps:**<br>video/x-av1<br>alignment=au<br>width=(int)3840,<br>height=(int)2160,<br>framerate=(fraction)60/1 | vts_av1_2160p_hdr10_60.0f_BT2020_yuv420p_15M_a0_v3600_60sec.mp4 |
 
-## 6.0 Resolution_Switch_ABR
+## 6.0 Adaptive Bitrate Resolution Switching
 
 ### 6.1 Low-to-High Bitrate
 
@@ -305,69 +305,68 @@ Validate that the stream reports the correct DynamicRange and color metadata for
 ## Validation Methods
 **Validation Tool: gst-validate-1.0**
 
- ### Validation Pre-Conditions
+### Validation Pre-Conditions
+
+#### Common Pass Criteria
+The following criteria apply to all test cases unless explicitly stated otherwise:
+1. No GST_MESSAGE_ERROR is reported during test execution
+2. The requested operation completes successfully.
+3. The pipeline reaches and maintains the expected state.
+4. Playback continues without pipeline errors, decoder errors, or PTS-related errors.
+5. Proper AV synchronization is maintained where audio and video streams are present.
+6. Frame drops remain within the acceptable threshold defined for the platform.
+
 #### Normal Playback
 
-1. Check that proper A/V sync is maintained.
-2. Monitor that the GST_MESSAGE events are triggered properly during EOS and playback stop.
-3. Verify the first frame rendered, decoder error, PTS error and buffer underrun.
-4. Ensure framedrops are within the acceptable threshold.
-5. Detect video frame freeze.
-6. Ensure there are no audio silence.
+1. Start playback of the stream.
+2. Monitor pipeline state transitions and playback progression.
+3. Monitor that the expected GST_MESSAGE events are received during playback completion and EOS handling.
+4. Verify successful first-frame rendering and ensure no buffer underrun occurs.
+5. Check for video frame freeze.
+6. Ensure no unintended audio silence is observed during playback.
 
-#### Pause Reume
+#### Pause Resume
 
 1. Start playback of the stream.
 2. Play for 30 seconds, then pause.
-3. Check that the pipeline changes from Playing to Paused state upon pause.
+3. Check that the pipeline transitions from PLAYING to PAUSED.
 4. Check that no video or audio is rendered while paused.
 5. Wait 5 seconds, then resume.
-6. Check that the pipeline changes from Paused to Playing upon resume, with no pipeline error.
+6. Check that the pipeline transitions from PAUSED to PLAYING upon resume without pipeline errors.
 7. Check playback continues from the paused position.
-8. Ensure proper A/V sync is maintained.
-9. Ensure framedrops are within the acceptable threshold.
 
 #### Trick Modes (Fast-Forward & Rewind)
 
 1. Start playback of the stream.
-2. Trigger FW/RW playback and observe smooth output for 0.5x, 2x, -2x, -4x.
-3. Ensure there are no pipeline error, decoder error and PTS error.
-4. Ensure there is correct transition back to normal playback (1x) after the FF/RW transitions.
-5. Ensure A/V synchronization is maintained.
-6. Ensure framedrops are within the acceptable threshold.
+2. Trigger fast-forward and rewind playback (for example, 0.5x, 2x, -2x, and -4x).
+3. Ensure there is correct transition back to normal playback (1x) after the FF/RW transitions.
 
 #### Forward and Backward Seek
 
 1. Start playback of the stream.
 2. Ensure Seek request is accepted successfully.
-3. Ensure Playback position moves to the requested target timestamp within acceptable tolerance.
-4. After each seek, confirm playback starts from the expected position and that the pipeline is in the playing state.
-5. Ensure there are no pipeline error, decoder error and PTS error.
-6. Ensure A/V synchronization is maintained.
-7. Ensure framedrops are within the acceptable threshold.
+3. Ensure the playback position moves to the requested target timestamp within the acceptable tolerance.
+4. Check that all applicable seek-related events are handled correctly and playback resumes from the expected position.
 
-#### Resolution_Switch_ABR
+#### Adaptive Bitrate (ABR) Resolution Switching
 
 1. Start playback of the stream.
-2. Switch video resolution from low-to-high and high-to-low bitrates.
+2. Switch between lower and higher bitrate representations and verify the corresponding resolution changes.
 3. Confirm the negotiated caps transition in sequence and ensure each step is reached before the next one begins.
 4. Confirm the stream remains in the playing state while the output resumes on the expected resolution.
-5. Ensure there are no pipeline error, decoder error and PTS error.
-6. Ensure A/V synchronization is maintained.
-7. Ensure framedrops are within the acceptable threshold.
 
 #### Metadata Propagation
 
 1. Start playback of the stream.
-2. Check the video details (resolution, frame rate, pixel format) match the stream name.
-3. Check the audio details (codec, channels, sample rate) match the stream name.
+2. Verify that video properties (resolution, frame rate, pixel format) match the expected stream characteristics.
+3. Verify that audio properties (codec, channel count, sample rate) match the expected stream characteristics.
 4. Check that the HDR mode and colour primaries stay the same from the first frame to the end.
-5. Ensure metadata remains unchanged throughout playback (mastering-display-info, content-light-level)
+5. Ensure metadata remains unchanged throughout playback (mastering-display-info, content-light-level).
 
 ### Additional validation methods
 | TC ID | Validation method |
 |---|---|
-| VTS_L4_HEVC_1501 | Verify negotiated caps contain HDR-specific signalling (e.g. colorimetry=bt2020-*, transfer=smpte2084, mastering-display-info, content-light-level where present). |
+|VTS_L4_HEVC_1501 | Verify negotiated caps contain HDR-specific signalling (e.g. colorimetry=bt2020-*, transfer=smpte2084, mastering-display-info, content-light-level where present). |
 |VTS_L4_AV1_1501  | Verify negotiated caps contain HDR-specific signalling (e.g. colorimetry=bt2020-*, HDR transfer characteristics, HDR metadata fields where present). |
 |VTS_L4_AV1_1601_02 | After each seek, verify negotiated video sink caps retain HDR signalling (colorimetry, transfer characteristics, mastering-display-info, content-light-level) and do not renegotiate to SDR values.|
 |VTS_L4_AV1_1601_03 | After each seek, verify negotiated video sink caps retain HDR signalling (colorimetry, transfer characteristics, mastering-display-info, content-light-level) and do not renegotiate to SDR values.|
