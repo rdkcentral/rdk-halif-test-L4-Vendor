@@ -180,10 +180,8 @@ flowchart TB
         cmake["CMake build<br/>(one platform source)"]
         bundle["arm-deps/make-device-bundle.py"]
         cfg_src[("config/platform.yaml")]
-        vid_src[("video-inputs/")]
         cmake --> bundle
         cfg_src --> bundle
-        vid_src --> bundle
     end
 
     subgraph host["Test host (Python RAFT, AV scope)"]
