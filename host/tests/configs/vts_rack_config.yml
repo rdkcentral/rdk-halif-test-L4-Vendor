@@ -1,0 +1,157 @@
+#** *****************************************************************************
+# *
+# * If not stated otherwise in this file or this component's LICENSE file the
+# * following copyright and licenses apply:
+# *
+# * Copyright 2023 RDK Management
+# *
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# *
+# *
+# http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# *
+#* ******************************************************************************
+
+# This config file creates your environment, defaults are setup internally unless otherwise overridden.
+# you will need at least 1 rack and 1 slot to operate.
+# each module e.g. console options, will be off by default unless otherwise stated
+
+# Depreciated
+# slotx: address:  IP of device while running locally, replaced with slotx: ip
+# slotx: deviceConsole:  IP of device while running locally, replaced with slotx: devices
+
+# This example is taken from https://github.com/rdkcentral/python_raft/blob/master/examples/configs/example_rack_config.yml
+# For information on python_raft please refer to : https://github.com/rdkcentral/python_raft/blob/master/README.md
+
+# Data that is global to all tests.
+globalConfig:
+    includes:
+        # [ includes: ]
+        # [ deviceConfig: "required.yml file"  ]
+        deviceConfig: "example_device_config.yml"
+    # capture:
+    #     # [capture: optional]
+    #         # [ocrEnginePath: "/usr/bin/tesseract"] # "C:\\Program Files\\Tesseract-OCR\\tesseract.exe" (For Windows) - tesseract binary
+    #         # [resolution: "1080p"] - Capture resolution
+    #         # [input: 0] - which input is connected to the video path
+    #     # Note: Video capture will not be installed unless screenRegions: is defined in deviceConfig:
+    #     ocrEnginePath: "/usr/bin/tesseract" # "C:\\Program Files\\Tesseract-OCR\\tesseract.exe" (For Windows)
+    #     resolution: "1080p"
+    #     input: 0
+    local:
+        log:                # log for each slot
+            directory: "./logs"
+            delimiter: "/"
+
+# Define racks, their slots and the devices in them. These are not always physical racks and slots.
+rackConfig:
+    rack1:
+        name: "rack1"
+        description: "example config at my desk"
+        slot1:
+            # [ name: "required", description: "optional"]
+            name: "slot1"
+            devices:
+                # [ devices: ]
+                # [ type: "serial": port: "COM7" baudRate: "(default)115200" dataBits: "optional(8)" stopBits: "optional(1)" parity: "optional(None)" FlowControl: "optional(None)" ]
+                # [ type: "ssh": port: 22 username: "test" password: "test" ]
+                # [ type: "telnet": port: 23 username: "test" password: "test" ]
+                # Ensure all controller ports are unique. If a device service is not listening on the specified port, change it to a free port and update the device service configuration accordingly.
+                - dut:
+                    ip: "xxx.0.0.x" # IP Address of the ADA Hub
+                    description: "PC"
+                    platform: "vDevice"
+                    consoles:
+                        - default:
+                            type: "ssh"
+                            port: "xxxx"
+                            username: "xyz"
+                            ip: "xxx.0.0.x" #IP address
+                            password: "xyz"
+                            prompt: "~#"
+                        #For multiple instance tests, all SSH configs are used, single test uses 0th instance.
+                        - ssh_hal_test_0:
+                            type: "ssh"
+                            port: "xxxx"
+                            username: "xyz"
+                            ip: "xxx.0.0.x" #IP address
+                            password: "xyz"
+                            prompt: "~#"
+                        - ssh_hal_test_1:
+                            type: "ssh"
+                            port: "xxxx"
+                            username: "xyz"
+                            ip: "xxx.0.0.x" #IP address
+                            password: "xyz"
+                            prompt: "~#"
+                        - ssh_hal_test_2:
+                            type: "ssh"
+                            port: "xxxx"
+                            username: "xyz"
+                            ip: "xxx.0.0.x" #IP address
+                            password: "xyz"
+                            prompt: "~#"
+                        - ssh_player:
+                            type: "ssh"
+                            port: "xxxx"
+                            username: "xyz"
+                            ip: "xxx.0.0.x" #IP address
+                            password: "xyz"
+                            prompt: "~#"
+                        - ssh_hal_test:
+                            type: "ssh"
+                            port: "xxxx"
+                            username: "xyz"
+                            ip: "xxx.0.0.x" #IP address
+                            password: "xyz"
+                            prompt: "~#"
+                    outbound:
+                        download_url: "tftp://tftp-server.com/rack1/slot1/"    # download location for the CPE device
+                        upload_url: "sftp://server-address/home/workspace/tftp/rack1/slot1/" # upload location
+                        upload_url_base_dir: "sftp://server-address/home/workspace/tftp/rack1/slot1" # alternative upload location
+                        httpProxy:    # Local Proxy if required
+                        workspaceDirectory: './logs/workspace'   # Local working directory
+                    hdmiCECController:
+                        type: virtual-cec-client
+                        vendor: "vComponent"
+                        address: "xxx.0.0.x" # Needs to be be filled out with IP address
+                        username: "xyz" # Needs to be filled out with login username
+                        password: 'xyz' # Needs to be filled out with login password
+                        port: xxxx
+                        control_port: yyyy # Controller port must be unique for each <ControllerName>Controller
+                        # Copy the file from the device to the host location 'host/tests/configs/' path and provide the absolute host path.
+                        # For vDevice: copy from /etc/hdmicec/vcomponent_configurations/commands/hdmicec_device_config_add_network.yaml
+                        device_network_configuration: "path to hdmicec_device_config_add_network.yaml"
+                    hdmiController:
+                        type: virtual-hdmi-controller
+                        vendor: "vComponent"
+                        address: "xxx.0.0.x" # Needs to be be filled out with IP address
+                        username: "xyz" # Needs to be filled out with login username
+                        password:  'xyz' # Needs to be filled out with login password
+                        port: xxxx
+                        source_control_port: yyyy  # Controller port for HDMIInput Service
+                        sink_control_port: yyyy    # Controller port must HDMIOutput Service
+                    compositeController:
+                        type: virtual-composite-controller
+                        vendor: "vComponent"
+                        address: "xxx.0.0.x" # Needs to be be filled out with IP address
+                        username: "" # Needs to be filled out with login username
+                        password: '' # Needs to be filled out with login password
+                        port: xxxx
+                        control_port: yyyy # Controller port must be unique for each <ControllerName>Controller
+                    dutRebootController:
+                        type: virtual-dut-reboot-controller
+                        vendor: "vComponent"
+                        address: "xxx.0.0.x" # Needs to be be filled out with IP address
+                        username: "xyz" # Needs to be filled out with login username
+                        password: 'xyz' # Needs to be filled out with login password
+                        port: xxxx
+                        control_port: yyyy # Unique controller port (default vdevice controller port: 9081)

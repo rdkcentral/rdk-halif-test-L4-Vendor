@@ -1,23 +1,22 @@
 /** @file vts_main.cpp
  * @brief UT Core process entry point for the audio/video child target.
+ *
+ * Tests are registered by UT_ADD_TEST; group mappings are registered explicitly before UT_init().
  */
-#include <ut.h>
 
-/** Initializes UT Core, registers the L4 group, runs tests, and shuts down. */
+#include <ut.h>
+#include "vts_audio_video.h"
+
 int main(int argc, char** argv)
 {
-    UT_status_t status = UT_init(argc, argv);
+    registerAvTestGroups();
 
-    if (status != UT_STATUS_OK)
-    {
+    UT_status_t status = UT_init(argc, argv);
+    if (status != UT_STATUS_OK) {
         return -1;
     }
 
-    UTCore::UT_add_suite_withGroupID("L4RdkAudioVideoTest", UT_TESTS_L4);
-
     status = UT_run_tests();
-
     UT_exit();
-
     return (status == UT_STATUS_OK) ? 0 : 1;
 }

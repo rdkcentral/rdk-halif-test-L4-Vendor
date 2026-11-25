@@ -6,11 +6,9 @@
 
 #include <string>
 
-/** Values used to construct platform pipelines and run media scenarios. */
 struct L4Configuration {
     // Platform identity and generic playback elements.
     std::string platform;
-    std::string testUrl;
     std::string sourceElement;
     std::string decoderElement;
 
@@ -26,8 +24,6 @@ struct L4Configuration {
     // Playback sinks, filters, and scenario media paths.
     std::string audioSink;
     std::string videoSink;
-    std::string pauseVideo;
-    std::string forwardSeekVideo;
     std::string audioFilter;
     std::string videoFilter;
 
@@ -41,10 +37,9 @@ struct L4Configuration {
 class ConfigurationLayer {
 public:
     /**
-     * Loads and validates required key/value entries from a YAML file.
-     * @param path Path to the `.yaml` or `.yml` file.
-     * @return A populated configuration structure.
-     * @throws std::runtime_error If the file, format, or a required key is invalid.
+     * Loads the platform configuration from a YAML file.
+     * @param path Path to a .yaml or .yml file.
+     * @return Parsed configuration.
      */
     static L4Configuration load(const std::string& path);
 };

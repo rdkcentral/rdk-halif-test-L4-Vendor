@@ -18,14 +18,16 @@ public:
     PipelineManagementLayer();
 
     /**
-     * Builds the platform pipeline after checking the configured platform and codec.
+     * Builds the platform pipeline after checking the configured platform.
      * @param configuration Runtime platform and element settings.
      * @param fileUri Input media path.
+     * @param mediaInfo Stream details of the media, used when the platform does not require codec detection.
      * @param error Receives any GStreamer parse error.
      * @return The caller-owned pipeline element, or null on failure.
      */
                                     GstElement* createScenarioGstPipeline(const L4Configuration& configuration,
                                                                           const std::string& fileUri,
+                                                                          const MediaInfo& mediaInfo,
                                                                           GError** error) const;
 
 private:

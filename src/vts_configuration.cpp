@@ -3,8 +3,6 @@
  */
 #include "vts_configuration.h"
 
-
-
 #include <map>
 #include <memory>
 #include <stdexcept>
@@ -13,10 +11,7 @@
 #include <libfyaml.h>
 
 namespace {
-/**
- * Collects scalar entries from nested mappings under dotted keys such as "elements.audio_sink".
- * Repeated keys use the last value encountered.
- */
+
 void collectEntries(struct fy_node* mapping, const std::string& prefix,
                     std::map<std::string, std::string>& values, const std::string& path)
 {
@@ -33,8 +28,8 @@ void collectEntries(struct fy_node* mapping, const std::string& prefix,
         if (!keyText) {
             throw std::runtime_error("Cannot read configuration key in: " + path);
         }
-        const std::string fullKey = prefix + std::string(keyText, keyLength);
 
+        const std::string fullKey = prefix + std::string(keyText, keyLength);
         if (fy_node_is_mapping(value)) {
             collectEntries(value, fullKey + ".", values, path);
             continue;
@@ -52,9 +47,6 @@ void collectEntries(struct fy_node* mapping, const std::string& prefix,
     }
 }
 
-/**
- * Parses a YAML file whose top-level mapping holds scalars and nested mappings.
- */
 std::map<std::string, std::string> parseYaml(const std::string& path)
 {
     std::unique_ptr<struct fy_document, decltype(&fy_document_destroy)> document(
@@ -73,9 +65,7 @@ std::map<std::string, std::string> parseYaml(const std::string& path)
     return values;
 }
 
-/** Returns a required key or reports which configuration entry is missing. */
-const std::string& valueFor(const std::map<std::string, std::string>& values,
-                            const std::string& key)
+const std::string& valueFor(const std::map<std::string, std::string>& values, const std::string& key)
 {
     const auto value = values.find(key);
     if (value == values.end()) {
@@ -84,9 +74,8 @@ const std::string& valueFor(const std::map<std::string, std::string>& values,
     return value->second;
 }
 
-}
+} // namespace
 
-/** Loads required YAML keys and converts numeric settings into runtime types. */
 L4Configuration ConfigurationLayer::load(const std::string& path)
 {
     const std::string extension = path.substr(path.find_last_of('.') + 1);
@@ -95,9 +84,9 @@ L4Configuration ConfigurationLayer::load(const std::string& path)
     }
 
     const std::map<std::string, std::string> values = parseYaml(path);
+
     L4Configuration configuration;
     configuration.platform = valueFor(values, "platform");
-    configuration.testUrl = valueFor(values, "media.test_url");
     configuration.sourceElement = valueFor(values, "elements.source_element");
     configuration.decoderElement = valueFor(values, "elements.decoder_element");
     configuration.scenarioSourceElement = valueFor(values, "elements.scenario_source_element");
@@ -108,8 +97,6 @@ L4Configuration ConfigurationLayer::load(const std::string& path)
     configuration.videoConvertElement = valueFor(values, "elements.video_convert_element");
     configuration.audioSink = valueFor(values, "elements.audio_sink");
     configuration.videoSink = valueFor(values, "elements.video_sink");
-    configuration.pauseVideo = valueFor(values, "media.pause_video");
-    configuration.forwardSeekVideo = valueFor(values, "media.forward_seek_video");
     configuration.audioFilter = valueFor(values, "elements.audio_filter");
     configuration.videoFilter = valueFor(values, "elements.video_filter");
     configuration.volume = std::stod(valueFor(values, "playback.volume"));

@@ -73,17 +73,17 @@ public:
     /** Selects the playbin pipeline that matches the audio and video streams in the file. */
     GstElement* pipeline_creation(const L4Configuration& configuration,
                                   const std::string& fileUri,
-                                  const DetectedVideoInfo& videoInfo,
+                                  const MediaInfo& mediaInfo,
                                   GError**) const override
     {
         const std::string uri = mediaUri(fileUri);
-        if (videoInfo.hasAudio && !videoInfo.hasVideo) {
+        if (mediaInfo.hasAudio && !mediaInfo.hasVideo) {
             return createAudioOnlyPipeline(configuration, uri);
         }
-        if (!videoInfo.hasAudio && videoInfo.hasVideo) {
+        if (!mediaInfo.hasAudio && mediaInfo.hasVideo) {
             return createVideoOnlyPipeline(configuration, uri);
         }
-        if (videoInfo.hasAudio && videoInfo.hasVideo) {
+        if (mediaInfo.hasAudio && mediaInfo.hasVideo) {
             return createAudioVideoPipeline(configuration, uri);
         }
         throw std::runtime_error("No audio or video stream found in: " + fileUri);

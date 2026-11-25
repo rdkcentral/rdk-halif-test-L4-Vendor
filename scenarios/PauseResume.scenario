@@ -1,0 +1,5 @@
+description, handles-states=true, need-clock-sync=true
+play, playback-time=0.0
+pause, playback-time=5.0, duration=5.0
+play, playback-time=10.0
+stop, playback-time=15.0
