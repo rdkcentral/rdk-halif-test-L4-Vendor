@@ -1,0 +1,265 @@
+# AV stream configuration (AVStreams).
+# Source: docs/L4_Test_Cases.md (stream column) matched to the Polaris streams_config names (docs/L4_Stream_Mapping.md).
+# input: relative path on the stream server (AVModule.stream_download_path + input). The DUT stores the file under its file name.
+# Entries marked TO CONFIRM are not in the Polaris list: Sky must confirm the file name or path.
+
+AVStreams:
+  vts_aac_11_025k_2ch_64k_a647_v0_60sec:
+    input: "Audio/vts_aac_11.025k_2ch_64k_a647_v0_60sec.mp4"
+    duration: 60
+    audio_frames: 647
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_aac_48k_6ch_512k_a28126_v36000_600sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_aac_48k_6ch_512k_a28126_v36000_600sec.mp4"
+    duration: 600
+    audio_frames: 28126
+    video_frames: 36000
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_ac3_32k_2ch_128k_a1250_v0_60sec:
+    input: "Audio/vts_ac3_32k_2ch_128k_a1250_v0_60sec.mp4"
+    duration: 60
+    audio_frames: 1250
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_ac3_48k_6ch_512k_a28126_v36000_600sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_ac3_48k_6ch_512k_a28126_v36000_600sec.mp4"
+    duration: 600
+    audio_frames: 28126
+    video_frames: 36000
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_av1_1080p_sdr_30_0f_BT709_yuv420p_10M_aac_48k_2ch_256k_a2814_v1800_60sec:
+    input: "Audio_Video/HD/vts_av1_1080p_sdr_30.0f_BT709_yuv420p_10M_aac_48k_2ch_256k_a2814_v1800_60sec.mp4"
+    duration: 60
+    audio_frames: 2814
+    video_frames: 1800
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_av1_2160p_hdr10_60_0f_BT2020_yuv420p_15M_a0_v3600_60sec:
+    input: "Video/vts_av1_2160p_hdr10_60.0f_BT2020_yuv420p_15M_a0_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 0
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_av1_2160p_hlg_60_0f_BT2020_yuv420p_20M_ac3_48k_6ch_512k_a18750_v36000_600sec:
+    input: "Audio_Video/Long_Duration/Trick_Modes/vts_av1_2160p_hlg_60.0f_BT2020_yuv420p_20M_ac3_48k_6ch_512k_a18750_v36000_600sec.mp4"
+    duration: 600
+    audio_frames: 18750
+    video_frames: 36000
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_eac3_32k_3ch_128k_a1250_v0_60sec:
+    input: "Audio/vts_eac3_32k_3ch_128k_a1250_v0_60sec.mp4"
+    duration: 60
+    audio_frames: 1250
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_eac3_48k_6ch_512k_a28126_v36000_600sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_eac3_48k_6ch_512k_a28126_v36000_600sec.mp4"
+    duration: 600
+    audio_frames: 28126
+    video_frames: 36000
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_eac3_atmos_32k_2ch_128k_a1250_v0_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_eac3_atmos_32k_2ch_128k_a1250_v0_60sec.mp4"
+    duration: 60
+    audio_frames: 1250
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_flac_44_1k_2ch_a575_v0_60sec:
+    input: "Audio/vts_flac_44.1k_2ch_a575_v0_60sec.mp4"
+    duration: 60
+    audio_frames: 575
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h264_1080i_sdr_29_97f_BT709_yuv420p_5M_ac3_48k_6ch_256k_a1875_v1797_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h264_1080i_sdr_29.97f_BT709_yuv420p_5M_ac3_48k_6ch_256k_a1875_v1797_60sec.mp4"
+    duration: 60
+    audio_frames: 1875
+    video_frames: 1797
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h264_1080p_sdr_60_0f_BT709_yuv420p_12M_a0_v3600_60sec:
+    input: "Video/vts_h264_1080p_sdr_60.0f_BT709_yuv420p_12M_a0_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 0
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h264_1080p_sdr_60_0f_BT709_yuv420p_20M_aac_48k_6ch_512k_a28126_v36000_600sec:
+    input: "Audio_Video/Long_Duration/Trick_Modes/vts_h264_1080p_sdr_60.0f_BT709_yuv420p_20M_aac_48k_6ch_512k_a28126_v36000_600sec.mp4"
+    duration: 600
+    audio_frames: 28126
+    video_frames: 36000
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h264_1080p_sdr_60_0f_BT709_yuv420p_8M_ac3_48k_6ch_512k_a1875_v3600_60sec:
+    input: "Audio_Video/HD/vts_h264_1080p_sdr_60.0f_BT709_yuv420p_8M_ac3_48k_6ch_512k_a1875_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 1875
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h264_abr_multi_bitrate_2k_BT709_yuv420p_aac_48k_2ch_256k_300sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h264_abr_multi_bitrate_2k_BT709_yuv420p_aac_48k_2ch_256k_300sec.mp4"
+    duration: 300
+    audio_frames: 0
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h264_abr_multi_bitrate_sdr_BT709_yuv420p_aac_48k_2ch_256k_300sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h264_abr_multi_bitrate_sdr_BT709_yuv420p_aac_48k_2ch_256k_300sec.mp4"
+    duration: 300
+    audio_frames: 0
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_1080i_sdr_60_0f_BT709_yuv420p_8M_eac3_48k_6ch_512k_a1875_v3599_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_1080i_sdr_60.0f_BT709_yuv420p_8M_eac3_48k_6ch_512k_a1875_v3599_60sec.mp4"
+    duration: 60
+    audio_frames: 1875
+    video_frames: 3599
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_1080p_sdr_60_0f_BT709_yuv420p_5M_a0_v3600_60sec:
+    input: "Video/vts_h265_1080p_sdr_60.0f_BT709_yuv420p_5M_a0_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 0
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_2160p_dolby_vision_60_0f_BT2020_yuv420p_20M_eac3_48k_6ch_512k_a3001_v3600_61sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_2160p_dolby_vision_60.0f_BT2020_yuv420p_20M_eac3_48k_6ch_512k_a3001_v3600_61sec.mp4"
+    duration: 61
+    audio_frames: 3001
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_2160p_hdr10_24_0f_BT2020_yuv420p_25M_a0_v1440_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_2160p_hdr10_24.0f_BT2020_yuv420p_25M_a0_v1440_60sec.mp4"
+    duration: 60
+    audio_frames: 0
+    video_frames: 1440
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_2160p_hdr10_60_0f_BT2020_yuv420p_18M_eac3_48k_6ch_512k_a18750_v36000_600sec:
+    input: "Audio_Video/Long_Duration/Trick_Modes/vts_h265_2160p_hdr10_60.0f_BT2020_yuv420p_18M_eac3_48k_6ch_512k_a18750_v36000_600sec.mp4"
+    duration: 600
+    audio_frames: 18750
+    video_frames: 36000
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_2160p_hdr10_60_0f_BT2020_yuv420p_60M_eac3_48k_6ch_512k_a1875_v3600_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_2160p_hdr10_60.0f_BT2020_yuv420p_60M_eac3_48k_6ch_512k_a1875_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 1875
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_2160p_hdr10plus_60_0f_BT2020_yuv420p_60M_eac3_48k_6ch_512k_a1875_v3600_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_2160p_hdr10plus_60.0f_BT2020_yuv420p_60M_eac3_48k_6ch_512k_a1875_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 1875
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_2160p_hlg_60_0f_BT2020_yuv420p_60M_ac3_48k_6ch_512k_a1875_v3600_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_2160p_hlg_60.0f_BT2020_yuv420p_60M_ac3_48k_6ch_512k_a1875_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 1875
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_abr_multi_bitrate_2k_BT709_yuv420p_eac3_48k_6ch_512k_300sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_abr_multi_bitrate_2k_BT709_yuv420p_eac3_48k_6ch_512k_300sec.mp4"
+    duration: 300
+    audio_frames: 0
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_h265_abr_multi_bitrate_hdr10_BT2020_yuv420p_eac3_48k_6ch_512k_300sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_h265_abr_multi_bitrate_hdr10_BT2020_yuv420p_eac3_48k_6ch_512k_300sec.mp4"
+    duration: 300
+    audio_frames: 0
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_mp3_16k_2ch_128k_a1669_v0_60sec:
+    input: "Audio/vts_mp3_16k_2ch_128k_a1669_v0_60sec.mp4"
+    duration: 60
+    audio_frames: 1669
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_mpeg2_1080p_sdr_60_0f_BT709_yuv420p_20M_aac_48k_6ch_256k_a2814_v3600_60sec:
+    input: "Audio_Video/HD/vts_mpeg2_1080p_sdr_60.0f_BT709_yuv420p_20M_aac_48k_6ch_256k_a2814_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 2814
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_opus_12k_2ch_128k_a3001_v0_61sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_opus_12k_2ch_128k_a3001_v0_61sec.webm"
+    duration: 61
+    audio_frames: 3001
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_pcm_44_1k_2ch_a2584_v0_60sec:
+    input: "Audio/vts_pcm_44.1k_2ch_a2584_v0_60sec.mp4"
+    duration: 60
+    audio_frames: 2584
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_vorbis_44_1k_2ch_128k_a2586_v0_61sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_vorbis_44.1k_2ch_128k_a2586_v0_61sec.webm"
+    duration: 61
+    audio_frames: 2586
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_vp9_1080p_sdr_60_0f_BT709_yuv420p_15M_aac_48k_2ch_512k_a2814_v3600_60sec:
+    input: "Audio_Video/HD/vts_vp9_1080p_sdr_60.0f_BT709_yuv420p_15M_aac_48k_2ch_512k_a2814_v3600_60sec.mp4"
+    duration: 60
+    audio_frames: 2814
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_vp9_2160p_sdr_60_0f_BT2020_yuv420p_18M_opus_48k_8ch_256k_a30001_v36000_601sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_vp9_2160p_sdr_60.0f_BT2020_yuv420p_18M_opus_48k_8ch_256k_a30001_v36000_601sec.webm"
+    duration: 601
+    audio_frames: 30001
+    video_frames: 36000
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_vp9_2160p_sdr_60_0f_BT2020_yuv420p_20M_opus_48k_6ch_512k_a3001_v3600_61sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_vp9_2160p_sdr_60.0f_BT2020_yuv420p_20M_opus_48k_6ch_512k_a3001_v3600_61sec.webm"
+    duration: 61
+    audio_frames: 3001
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_vp9_2160p_sdr_60_0f_BT709_yuv420p_15M_a0_v3600_60sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_vp9_2160p_sdr_60.0f_BT709_yuv420p_15M_a0_v3600_60sec.webm"
+    duration: 60
+    audio_frames: 0
+    video_frames: 3600
+    audio_error_frames: 0
+    video_error_frames: 0
+  vts_vp9_abr_multi_bitrate_sdr_BT709_yuv420p_opus_48k_2ch_256k_300sec:  # TO CONFIRM (not in Polaris list)
+    input: "vts_vp9_abr_multi_bitrate_sdr_BT709_yuv420p_opus_48k_2ch_256k_300sec.webm"
+    duration: 300
+    audio_frames: 0
+    video_frames: 0
+    audio_error_frames: 0
+    video_error_frames: 0

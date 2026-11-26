@@ -1,0 +1,6 @@
+description, seek=true, handles-states=true, need-clock-sync=true
+play, playback-time=0.0
+wait, duration=5.0
+seek, name=BackwardSeek, playback-time=5.0, start=2.0, flags=accurate+flush
+wait, duration=5.0
+stop, playback-time=10.0

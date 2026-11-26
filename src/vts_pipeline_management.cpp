@@ -14,10 +14,11 @@ PipelineManagementLayer::PipelineManagementLayer()
 {
 }
 
-/** Validates platform identity and codec metadata, then creates the pipeline element. */
+/** Validates platform identity, then creates the pipeline element for the detected media. */
 GstElement* PipelineManagementLayer::createScenarioGstPipeline(
     const L4Configuration& configuration,
     const std::string& fileUri,
+    const MediaInfo& mediaInfo,
     GError** error) const
 {
     const std::string compiledPlatform = platformPipelineManagement->platform_name();
@@ -31,10 +32,10 @@ GstElement* PipelineManagementLayer::createScenarioGstPipeline(
                                  "' does not match the platform selected at CMake configure time ('" +
                                  compiledPlatform + "')");
     }
-    DetectedVideoInfo videoInfo{};
+    MediaInfo detected = mediaInfo;
     if (platformPipelineManagement->requires_codec_detection()) {
-        videoInfo = MediaStreamDetector::detect(fileUri);
+        detected = MediaStreamDetector::detect(fileUri);
     }
-    return platformPipelineManagement->pipeline_creation(configuration, fileUri, videoInfo, error);
+    return platformPipelineManagement->pipeline_creation(configuration, fileUri, detected, error);
 }
 

@@ -1,0 +1,38 @@
+#** *****************************************************************************
+# *
+# * If not stated otherwise in this file or this component's LICENSE file the
+# * following copyright and licenses apply:
+# *
+# * Copyright 2025 RDK Management
+# *
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# *
+# * http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# *
+#** ******************************************************************************
+
+# Setup for the AV L4 pipeline test (vts_l4_test.py).
+VTS:
+  description: "AV L4 pipeline test setup"
+  num_of_instances: 1
+  # UT Core suites to run, in this order. Each name must be a suite registered in src/vts_audio_video.cpp.
+  suites:
+    - NormalPlayback
+    - PauseResume
+    - Seek
+    - MetadataPropagation
+  test:
+    # Bundle built by build-arm.sh (arm-deps/make-device-bundle.py), relative to this directory.
+    artifacts:
+      - "../../../build-arm/device/l4-rdk-audio-video.tar.gz"
+    # Runs the device binary from the bundle directory. run.sh sets L4_CONFIG and LD_LIBRARY_PATH.
+    execute: "./run.sh"
+    type: UT-C

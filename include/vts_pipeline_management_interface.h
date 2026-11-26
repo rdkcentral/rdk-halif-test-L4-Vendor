@@ -30,14 +30,14 @@ public:
      * Creates the GStreamer pipeline for one media input.
      * @param configuration Runtime element and sink settings.
      * @param fileUri Absolute or relative path to the media file.
-     * @param videoInfo Audio and video stream presence detected from the file.
+     * @param mediaInfo Audio and video details detected from the file.
      * @param error Receives any GStreamer parse error.
      * @return Caller-owned pipeline element; throws on configuration errors.
      */
     virtual GstElement* pipeline_creation(
         const L4Configuration& configuration,
         const std::string& fileUri,
-        const DetectedVideoInfo& videoInfo,
+        const MediaInfo& mediaInfo,
         GError** error) const = 0;
 };
 
